@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Produz valores monetários por extenso e em portugês de portugal.}
   spec.description   = %q{Os valores monetários podem ser um numerico ou uma string de digitos. O extenso será produzido na escala curta podendo escolher a moeda.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.homepage      = "https://github.com/hernanilr/extenso_pt"
   spec.license       = "MIT"
 
   #spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
