@@ -27,7 +27,7 @@ module ExtensoPt
     @@mp=(a2)?ms+"S":mp
     @@cp=(a4)?cs+"S":cp
     q=n[/^\d+/].to_s.reverse.scan(/\d{1,3}/).map{|i|i.reverse.to_i}
-    ExtensoPt.r("",q,0)+ExtensoPt.w(q,(n[/\.\d*/].to_f*100).round)
+    q.count>8?"":ExtensoPt.r("",q,0)+ExtensoPt.w(q,(n[/\.\d*/].to_f*100).round)
   end
 end
 class String
