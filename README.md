@@ -1,6 +1,6 @@
 # ExtensoPt
 
-Produz valores monetários por extenso e em portugês de portugal. Os valores monetários podem ser um numerico ou uma string de digitos. O extenso será produzido na escala curta podendo escolher a moeda.
+Produz valores monetários por extenso e em portugês de portugal. Os valores monetários podem ser um numerico ou uma string de digitos. O extenso será produzido na escala longa [wiki](ihttps://pt.wikipedia.org/wiki/Escalas_curta_e_longa), utilizada em todos os países lusófonos (à excepção do Brasil), podendo escolher a moeda.
  
 ## Installation
 
@@ -21,9 +21,14 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-"1234.10".extenso => "MIL DUZENTOS E TRINTA E QUATRO EUROS E DEZ CÊNTIMOS"
-120000.12.extenso => "CENTO E VINTE MIL EUROS E DOZE CÊNTIMOS"
-1.extenso("REAL") => "UM REAL"
+"1234.10".extenso                               => "MIL DUZENTOS E TRINTA E QUATRO EUROS E DEZ CÊNTIMOS"
+12000000.12.extenso                             => "DOZE MILHÕES DE EUROS E DOZE CÊNTIMOS"
+1.01.extenso(moeda:"DÓLAR")                     => "UM DÓLAR E UM CÊNTIMO"
+10.1.extenso(moedap:"DÓLARES")                  => "DEZ DÓLARES E DEZ CÊNTIMOS"
+1.01.extenso(moeda:"REAL",fracao:"CENTAVO")     => "UM REAL E UM CENTAVO"
+1.10.extenso(moeda:"REAL",fracao:CENTAVO")      => "UM REAL E DEZ CENTAVOS"
+2.00.extenso(moedap:"REAIS")                    => "DOIS REAIS"
+2.10.extenso(moedap:"REAIS",fracaop:"CENTAVOS") => "DOIS REAIS E DEZ CENTAVOS"
 ```
 
 ## Development
@@ -34,7 +39,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/extenso_pt.
+Bug reports and pull requests are welcome on GitHub at [github](https://github.com/hernanilr/extenso_pt).
 
 ## License
 
