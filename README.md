@@ -1,7 +1,7 @@
 # ExtensoPt
 
-Produz valores monetários por extenso e em portugês de portugal. Os valores monetários podem ser um numerico ou uma string de digitos. O extenso será produzido na escala longa [wiki](https://pt.wikipedia.org/wiki/Escalas_curta_e_longa), utilizada em todos os países lusófonos (à excepção do Brasil), podendo escolher a moeda.
- 
+Produz valores monetários (defeito EURO) por extenso em portugês de portugal. Os valores monetários podem ser um numerico ou uma string de digitos. O extenso será produzido na escala longa [wiki](https://pt.wikipedia.org/wiki/Escalas_curta_e_longa), utilizada em todos os países lusófonos (à excepção do Brasil), podendo escolher outra moeda.
+
 ## Installation
 
 Add this line to your application's Gemfile:

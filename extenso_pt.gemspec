@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Hernâni Rodrigues Vaz"]
   spec.email         = ["hernanirvaz@gmail.com"]
 
-  spec.summary       = %q{Produz valores monetários por extenso e em portugês de portugal.}
-  spec.description   = spec.summary+%q{ Os valores monetários podem ser um numerico ou uma string de digitos. O extenso será produzido na escala longa, utilizada em todos os países lusófonos (à excepção do Brasil), podendo escolher a moeda.}
+  spec.summary       = %q{Produz valores monetários (defeito EURO) por extenso em portugês de portugal.}
+  spec.description   = spec.summary+%q{ Os valores monetários podem ser um numerico ou uma string de digitos. O extenso será produzido na escala longa, utilizada em todos os países lusófonos (à excepção do Brasil), podendo escolher outra moeda.}
   spec.homepage      = "https://github.com/hernanilr/extenso_pt"
   spec.license       = "MIT"
 
