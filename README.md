@@ -1,6 +1,6 @@
 # ExtensoPt
 
-Produz valores monetários por extenso e em portugês de portugal. Os valores monetários podem ser um numerico ou uma string de digitos. O extenso será produzido na escala longa [wiki](ihttps://pt.wikipedia.org/wiki/Escalas_curta_e_longa), utilizada em todos os países lusófonos (à excepção do Brasil), podendo escolher a moeda.
+Produz valores monetários por extenso e em portugês de portugal. Os valores monetários podem ser um numerico ou uma string de digitos. O extenso será produzido na escala longa [wiki](https://pt.wikipedia.org/wiki/Escalas_curta_e_longa), utilizada em todos os países lusófonos (à excepção do Brasil), podendo escolher a moeda.
  
 ## Installation
 
@@ -26,7 +26,7 @@ Or install it yourself as:
 1.01.extenso(moeda:"DÓLAR")                     => "UM DÓLAR E UM CÊNTIMO"
 10.1.extenso(moedap:"DÓLARES")                  => "DEZ DÓLARES E DEZ CÊNTIMOS"
 1.01.extenso(moeda:"REAL",fracao:"CENTAVO")     => "UM REAL E UM CENTAVO"
-1.10.extenso(moeda:"REAL",fracao:CENTAVO")      => "UM REAL E DEZ CENTAVOS"
+1.10.extenso(moeda:"REAL",fracao:"CENTAVO")     => "UM REAL E DEZ CENTAVOS"
 2.00.extenso(moedap:"REAIS")                    => "DOIS REAIS"
 2.10.extenso(moedap:"REAIS",fracaop:"CENTAVOS") => "DOIS REAIS E DEZ CENTAVOS"
 ```
