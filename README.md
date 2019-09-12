@@ -26,10 +26,12 @@ Or install it yourself as:
 1.01.extenso(moeda_singular:"DÓLAR")                          => "UM DÓLAR E UM CÊNTIMO"
 10.1.extenso(moeda_plural:"DÓLARES")                          => "DEZ DÓLARES E DEZ CÊNTIMOS"
 1.01.extenso(moeda_singular:"REAL",fracao_singular:"CENTAVO") => "UM REAL E UM CENTAVO"
-# por defeito o plural é <silgular>+"S"
+# por defeito plural = <silgular> mais "S"
 1.10.extenso(moeda_singular:"REAL",fracao_singular:"CENTAVO") => "UM REAL E DEZ CENTAVOS"
 2.00.extenso(moeda_plural:"REAIS")                            => "DOIS REAIS"
 2.10.extenso(moeda_plural:"REAIS",fracao_plural:"CENTAVOS")   => "DOIS REAIS E DEZ CENTAVOS"
+# por defeito singular = <plural> menos "S" (caso termine em "S")
+2.01.extenso(moeda_plural:"REAIS",fracao_plural:"CENTAVOS")   => "DOIS REAIS E UM CENTAVO"
 ```
 
 ## Development
