@@ -21,7 +21,7 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-"1234.10".extenso                                             => "MIL DUZENTOS E TRINTA E QUATRO EUROS E DEZ CÊNTIMOS"
+"1234".extenso                                                => "MIL DUZENTOS E TRINTA E QUATRO EUROS"
 12000000.12.extenso                                           => "DOZE MILHÕES DE EUROS E DOZE CÊNTIMOS"
 1.01.extenso(moeda_singular:"DÓLAR")                          => "UM DÓLAR E UM CÊNTIMO"
 10.1.extenso(moeda_plural:"DÓLARES")                          => "DEZ DÓLARES E DEZ CÊNTIMOS"
