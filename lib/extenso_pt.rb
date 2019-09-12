@@ -1,4 +1,5 @@
 require "extenso_pt/version"
+require "bigdecimal/util"
 
 module ExtensoPt
   class Error < StandardError; end
@@ -22,9 +23,9 @@ module ExtensoPt
   def self.w(u,d)t=u.find{|v|v>0}.to_i+u[1..-1].to_a.find{|v|v>0}.to_i;f7(u,t+d)+f4(t)+f6(t,d)+i(d,0)+f5(d)end
   def self.r(g,j,p)t=j[p];p>=j.count*1?g:r(i(t,p)+h(t>0?t>1?8+p:p:0)+f3(p>0?j[p-1]:0)+g,j,p+1)end
   def extenso(f={moeda:"EURO",fracao:"CÊNTIMO",moedap:"EUROS",fracaop:"CÊNTIMOS"})
-    n=(self.is_a?String)?self:'%.2f'%self
     @@ms=f[:moeda]?f[:moeda]:"EURO";@@cs=f[:fracao]?f[:fracao]:"CÊNTIMO"
     @@mp=f[:moedap]?f[:moedap]:@@ms+"S";@@cp=f[:fracaop]?f[:fracaop]:@@cs+"S"
+    n=self.to_d.to_s("F")
     q=n[/^\d+/].to_s.reverse.scan(/\d{1,3}/).map{|i|i.reverse.to_i}
     q.count>8?"":ExtensoPt.r("",q,0)+ExtensoPt.w(q,(n[/\.\d*/].to_f*100).round)
   end

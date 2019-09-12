@@ -20,8 +20,11 @@ class ExtensoPtTest < Minitest::Test
     assert_equal "DEZ DÓLARES E DEZ CÊNTIMOS", 10.1.extenso(moedap:"DÓLARES")
     assert_equal "UM REAL", 1.0.extenso(moeda:"REAL")
     assert_equal "UM REAL E UM CENTAVO", 1.01.extenso(moeda:"REAL",fracao:"CENTAVO")
-    assert_equal "UM REAL E DEZ CENTAVOS", 2.1.extenso(moeda:"REAL",fracao:"CENTAVO")
     assert_equal "DOIS REAIS E DEZ CENTAVOS", 2.1.extenso(fracao:"CENTAVO",moedap:"REAIS")
+
+    # bigdecimal necessario para valores maiores 1e12 devido a aritmetica binaria interna
+    assert_equal "CEM MIL TRILIÕES DE EUROS", (10**23).extenso
+    assert_equal "CEM MIL TRILIÕES DE EUROS", 1e23.extenso
 
     # limite maximo foi ultrapassado - 24 digitos
     assert_equal "", "111222333444555666777888999".extenso
