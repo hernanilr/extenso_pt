@@ -15,15 +15,15 @@ class ExtensoPtTest < Minitest::Test
     assert_equal "CEM MIL TRILIÕES DE EUROS", (10**23).extenso
     assert_equal "MIL DUZENTOS E TRINTA E QUATRO EUROS E DEZ CÊNTIMOS", "1234.10".extenso
     assert_equal "DOZE MILHÕES DE EUROS E DOZE CÊNTIMOS", 12000000.12.extenso
-    assert_equal "UM DÓLAR", 1.extenso(moeda_singular:"DÓLAR")
+    assert_equal "UM DÓLAR", 1.extenso(msingular:"DÓLAR")
     # por defeito o singular da fracao é CÊNTIMO e plural <singular>+"S"
-    assert_equal "UM DÓLAR E UM CÊNTIMO", 1.01.extenso(moeda_singular:"DÓLAR")
-    assert_equal "DEZ DÓLARES E DEZ CÊNTIMOS", 10.1.extenso(moeda_plural:"DÓLARES")
-    assert_equal "UM REAL", 1.0.extenso(moeda_singular:"REAL")
-    assert_equal "UM REAL E UM CENTAVO", 1.01.extenso(moeda_singular:"REAL",fracao_singular:"CENTAVO")
-    assert_equal "DOIS REAIS E DEZ CENTAVOS", 2.1.extenso(fracao_singular:"CENTAVO",moeda_plural:"REAIS")
+    assert_equal "UM DÓLAR E UM CÊNTIMO", 1.01.extenso(msingular:"DÓLAR")
+    assert_equal "DEZ DÓLARES E DEZ CÊNTIMOS", 10.1.extenso(mplural:"DÓLARES")
+    assert_equal "UM REAL", 1.0.extenso(msingular:"REAL")
+    assert_equal "UM REAL E UM CENTAVO", 1.01.extenso(msingular:"REAL",fsingular:"CENTAVO")
+    assert_equal "DOIS REAIS E DEZ CENTAVOS", 2.1.extenso(fsingular:"CENTAVO",mplural:"REAIS")
     # por defeito o singular é <plural> menos o "S"
-    assert_equal "DOIS REAIS E UM CENTAVO", 2.01.extenso(fracao_plural:"CENTAVOS",moeda_plural:"REAIS")
+    assert_equal "DOIS REAIS E UM CENTAVO", 2.01.extenso(fplural:"CENTAVOS",mplural:"REAIS")
 
     # bigdecimal necessario para valores maiores 1e12 devido a aritmetica binaria interna
     assert_equal "CEM MIL TRILIÕES DE EUROS", (10**23).extenso

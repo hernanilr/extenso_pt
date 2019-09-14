@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    extenso_pt (0.2.5)
+    extenso_pt (0.2.6)
 
 GEM
   remote: https://rubygems.org/
