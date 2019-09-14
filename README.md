@@ -21,17 +21,17 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-"1234".extenso                                                => "MIL DUZENTOS E TRINTA E QUATRO EUROS"
-12000000.12.extenso                                           => "DOZE MILHÕES DE EUROS E DOZE CÊNTIMOS"
-1.01.extenso(moeda_singular:"DÓLAR")                          => "UM DÓLAR E UM CÊNTIMO"
-10.1.extenso(moeda_plural:"DÓLARES")                          => "DEZ DÓLARES E DEZ CÊNTIMOS"
-1.01.extenso(moeda_singular:"REAL",fracao_singular:"CENTAVO") => "UM REAL E UM CENTAVO"
+"1234".extenso                                     => "MIL DUZENTOS E TRINTA E QUATRO EUROS"
+12000000.12.extenso                                => "DOZE MILHÕES DE EUROS E DOZE CÊNTIMOS"
+1.01.extenso(msingular:"DÓLAR")                    => "UM DÓLAR E UM CÊNTIMO"
+10.1.extenso(mplural:"DÓLARES")                    => "DEZ DÓLARES E DEZ CÊNTIMOS"
+1.01.extenso(msingular:"REAL",fsingular:"CENTAVO") => "UM REAL E UM CENTAVO"
 # por defeito plural = <silgular> mais "S"
-1.10.extenso(moeda_singular:"REAL",fracao_singular:"CENTAVO") => "UM REAL E DEZ CENTAVOS"
-2.00.extenso(moeda_plural:"REAIS")                            => "DOIS REAIS"
-2.10.extenso(moeda_plural:"REAIS",fracao_plural:"CENTAVOS")   => "DOIS REAIS E DEZ CENTAVOS"
+1.10.extenso(msingular:"REAL",fsingular:"CENTAVO") => "UM REAL E DEZ CENTAVOS"
+2.00.extenso(mplural:"REAIS")                      => "DOIS REAIS"
+2.10.extenso(mplural:"REAIS",fplural:"CENTAVOS")   => "DOIS REAIS E DEZ CENTAVOS"
 # por defeito singular = <plural> menos "S" (caso termine em "S")
-2.01.extenso(moeda_plural:"REAIS",fracao_plural:"CENTAVOS")   => "DOIS REAIS E UM CENTAVO"
+2.01.extenso(mplural:"REAIS",fplural:"CENTAVOS")   => "DOIS REAIS E UM CENTAVO"
 ```
 
 ## Development
