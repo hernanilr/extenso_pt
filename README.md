@@ -1,6 +1,6 @@
 # ExtensoPt
 
-Produz valores monetários (defeito EURO) por extenso em portugês de portugal. Os valores monetários podem ser um numerico ou uma string de digitos. O extenso será produzido na escala longa [wiki](https://pt.wikipedia.org/wiki/Escalas_curta_e_longa), utilizada em todos os países lusófonos (à excepção do Brasil), podendo escolher outra moeda.
+Produz valores monetários (defeito EURO) por extenso em portugês de portugal. Os valores monetários podem ser um numerico ou uma string de digitos. O extenso será produzido na escala longa [wiki](https://pt.wikipedia.org/wiki/Escalas_curta_e_longa), utilizada em todos os países lusófonos (à excepção do Brasil que usa escala curta), podendo ainda escolher a moeda e a fração.
 
 ## Installation
 
@@ -24,13 +24,13 @@ Or install it yourself as:
 "1234".extenso                                     => "MIL DUZENTOS E TRINTA E QUATRO EUROS"
 12000000.12.extenso                                => "DOZE MILHÕES DE EUROS E DOZE CÊNTIMOS"
 1.01.extenso(msingular:"DÓLAR")                    => "UM DÓLAR E UM CÊNTIMO"         
-10.1.extenso(mplural:"DÓLARES")                    => "DEZ DÓLARES E DEZ CÊNTIMOS"    # por defeito plural = <silgular> mais "S"
+10.1.extenso(mplural:"DÓLARES")                    => "DEZ DÓLARES E DEZ CÊNTIMOS"    # plural inferido <silgular> mais "S"
 14.01.extenso(mplural:"REAIS",fsingular:"CENTAVO") => "CATORZE REAIS E UM CENTAVO"
 14.10.extenso(mplural:"REAIS",fsingular:"CENTAVO") => "CATORZE REAIS E DEZ CENTAVOS"
 14.10.extenso(lc: :br)                             => "QUATORZE REAIS E DEZ CENTAVOS"
 1e10.extenso(mplural:"REAIS")                      => "DEZ MIL MILHÕES DE REAIS"      # portugal usa escala longa
 1e10.extenso(lc: :br)                              => "DEZ BILHÕES DE REAIS"          # brasil usa escala curta
-14.01.extenso(mplural:"REAIS",fplural:"CENTAVOS")  => "CATORZE REAIS E UM CENTAVO"    # por defeito singular = <plural> menos "S" (caso termine em "S")
+14.01.extenso(mplural:"REAIS",fplural:"CENTAVOS")  => "CATORZE REAIS E UM CENTAVO"    # singular inferido <plural> menos "S"
 ```
 
 ## Development
