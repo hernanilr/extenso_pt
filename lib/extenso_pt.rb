@@ -5,13 +5,15 @@ require "bigdecimal/util"
 module ExtensoPt
   class Error < StandardError; end
 
-  A0020=["","UM","DOIS","TRÊS","QUATRO","CINCO","SEIS","SETE","OITO","NOVE","DEZ","ONZE",
-         "DOZE","TREZE","CATORZE","QUINZE","DEZASSEIS","DEZASSETE","DEZOITO","DEZANOVE"]
-  A0100=["","","VINTE","TRINTA","QUARENTA","CINQUENTA","SESSENTA","SETENTA","OITENTA","NOVENTA"]
-  A1000=["","CEM","CENTO","DUZENTOS","TREZENTOS","QUATROCENTOS","QUINHENTOS",
-         "SEISCENTOS","SETECENTOS","OITOCENTOS","NOVECENTOS"]
-  A1e24=["","MIL"," MILHÃO"," MIL MILHÃO"," BILIÃO"," MIL BILIÃO"," TRILIÃO"," MIL TRILIÃO","",
-         " MIL"," MILHÕES"," MIL MILHÕES"," BILIÕES"," MIL BILIÕES"," TRILIÕES"," MIL TRILIÕES"]
+  LC=[:pt,:br]
+  A0020={pt: ["","UM","DOIS","TRÊS","QUATRO","CINCO","SEIS","SETE","OITO","NOVE","DEZ","ONZE","DOZE","TREZE","CATORZE","QUINZE","DEZASSEIS","DEZASSETE","DEZOITO","DEZANOVE"],
+         br: ["","UM","DOIS","TRES","QUATRO","CINCO","SEIS","SETE","OITO","NOVE","DEZ","ONZE","DOZE","TREZE","QUATORZE","QUINZE","DEZESSEIS","DEZESSETE","DEZOITO","DEZENOVE"]}
+  A0100={pt: ["","","VINTE","TRINTA","QUARENTA","CINQUENTA","SESSENTA","SETENTA","OITENTA","NOVENTA"],
+         br: ["","","VINTE","TRINTA","QUARENTA","CINQUENTA","SESSENTA","SETENTA","OITENTA","NOVENTA"]}
+  A1000={pt: ["","CEM","CENTO","DUZENTOS","TREZENTOS","QUATROCENTOS","QUINHENTOS","SEISCENTOS","SETECENTOS","OITOCENTOS","NOVECENTOS"],
+         br: ["","CEM","CENTO","DUZENTOS","TREZENTOS","QUATROCENTOS","QUINHENTOS","SEISCENTOS","SETECENTOS","OITOCENTOS","NOVECENTOS"]}
+  A1e24={pt: ["","MIL"," MILHÃO"," MIL MILHÃO"," BILIÃO"," MIL BILIÃO"," TRILIÃO"," MIL TRILIÃO",""," MIL"," MILHÕES"," MIL MILHÕES"," BILIÕES"," MIL BILIÕES"," TRILIÕES"," MIL TRILIÕES"],
+         br: ["","MIL"," MILHÃO"," BILHÃO"," TRILHÃO"," QUADRILHÃO"," QUINTILHÃO"," SEXTILHÃO",""," MIL"," MILHÕES"," BILHÕES"," TRILHÕES"," QUADRILHÕES"," QUINTILHÕES"," SEXTILHÕES"]}
 
   # Controle proposicao E
   #
@@ -64,7 +66,7 @@ module ExtensoPt
     end
   end
 
-  # Produz o extenso da parte fracionaria do valor monetário em protugûes de portugal.
+  # Produz o extenso da parte fracionaria do valor monetário em portugûes de portugal ou brasil.
   #
   # @param [Integer] fracao parte fracionaria do valor monetário ex: 100022.12 = 12
   # @return [String] o extenso da parte fracionaria do valor monetário
@@ -73,17 +75,17 @@ module ExtensoPt
     f7(t+fracao)+f4(t)+f6(t,fracao)+e999(fracao)+f5(fracao)
   end
 
-  # Produz o extenso dum valor (entre 0-999) em protugûes de portugal.
+  # Produz o extenso dum valor (entre 0-999) em portugûes de portugal ou brasil.
   #
   # @param [Integer] mil a converter
   # @param [Integer] pos posição actual em tratamento
   # @return [String] o extenso do [Integer] mil
   def self.e999(mil,pos=0)
     s=mil%100
-    A1000[(mil>100?1:0)+mil/100]+f1(mil)+A0100[s/10]+f2(s)+A0020[pos==1&&mil==1?0:s<20?s:s%10]
+    A1000[@@lc][(mil>100?1:0)+mil/100]+f1(mil)+A0100[@@lc][s/10]+f2(s)+A0020[@@lc][pos==1&&mil==1?0:s<20?s:s%10]
   end
 
-  # Produz recursivamente o extenso da parte inteira do valor monetário em protugûes de portugal.
+  # Produz recursivamente o extenso da parte inteira do valor monetário em portugûes de portugal ou brasil.
   #
   # @param [Integer] pos posição actual em tratamento
   # @param [String] ext extenso actual em tratamento
@@ -92,19 +94,22 @@ module ExtensoPt
     if (pos>=@@ai.count)
       ext
     else
-      erecursivo(pos+1,e999(@@ai[pos],pos)+A1e24[@@ai[pos]>0?@@ai[pos]>1?8+pos:pos:0]+f3(pos>0?@@ai[pos-1]:0)+ext)
+      erecursivo(pos+1,e999(@@ai[pos],pos)+A1e24[@@lc][@@ai[pos]>0?@@ai[pos]>1?8+pos:pos:0]+f3(pos>0?@@ai[pos-1]:0)+ext)
     end
   end
 
-  # Converte um objeto [String, Float, Integer] no seu extenso em protugûes de portugal.
+  # Converte um objeto [String, Float, Integer] no seu extenso em portugûes de portugal ou brasil.
   #
   # @param [Hash] moeda as opcoes para parametrizar a moeda/fração
+  # @option moeda [Symbol] :lc locale do extenso - portugûes de portugal (:pt) ou brasil (:br)
   # @option moeda [String] :msingular Moeda no singular - por defeito pode ser obtida do <b>:mplural menos "S"</b> (se terminar em "S")
   # @option moeda [String] :fsingular Fração no singular - por defeito pode ser obtida do <b>:fplural menos "S"</b> (se terminar em "S")
   # @option moeda [String] :mplural Moeda no plural - por defeito pode ser obtida do <b>:msingular+"S"</b>
   # @option moeda [String] :fplural Fração no plural - por defeito pode ser obtida do <b>:fsingular+"S"</b>
   # @return [String] o extenso do objeto
-  def extenso(moeda={msingular:"EURO",fsingular:"CÊNTIMO"})
+  def extenso(moeda={lc:(:pt),msingular:"EURO",fsingular:"CÊNTIMO"})
+    moeda={lc:(:br),msingular:"REAL",mplural:"REAIS",fsingular:"CENTAVO"} if (moeda[:lc]==:br&&!moeda[:mplural])
+    @@lc=LC.include?(moeda[:lc])?moeda[:lc]:(:pt)
     @@ms=moeda[:msingular]?moeda[:msingular]:moeda[:mplural].to_s[-1]=="S"?moeda[:mplural][0..-2]:"EURO"
     @@cs=moeda[:fsingular]?moeda[:fsingular]:moeda[:fplural].to_s[-1]=="S"?moeda[:fplural][0..-2]:"CÊNTIMO"
     @@mp=moeda[:mplural]?moeda[:mplural]:@@ms+"S"
