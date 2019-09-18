@@ -108,7 +108,7 @@ module ExtensoPt
   # @option moeda [String] :fplural Fração no plural - por defeito pode ser obtida do <b>:fsingular+"S"</b>
   # @return [String] o extenso do objeto
   def extenso(moeda={lc:(:pt),msingular:"EURO",fsingular:"CÊNTIMO"})
-    moeda={lc:(:br),msingular:"REAL",mplural:"REAIS",fsingular:"CENTAVO"} if (moeda[:lc]==:br&&!moeda[:mplural])
+    moeda={lc:(:br),msingular:"REAL",mplural:"REAIS",fsingular:"CENTAVO"} if (moeda[:lc]==:br&&!moeda[:mplural]&&!moeda[:fplural])
     @@lc=LC.include?(moeda[:lc])?moeda[:lc]:(:pt)
     @@ms=moeda[:msingular]?moeda[:msingular]:moeda[:mplural].to_s[-1]=="S"?moeda[:mplural][0..-2]:"EURO"
     @@cs=moeda[:fsingular]?moeda[:fsingular]:moeda[:fplural].to_s[-1]=="S"?moeda[:fplural][0..-2]:"CÊNTIMO"
