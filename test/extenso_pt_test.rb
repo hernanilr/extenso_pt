@@ -12,7 +12,7 @@ class ExtensoPtTest < Minitest::Test
     assert_equal "MIL DUZENTOS E TRINTA E QUATRO EUROS", 1234.extenso
     assert_equal "UM MILHÃO DE EUROS", 1000000.extenso
     assert_equal "DEZ MIL TRILIÕES DE EUROS", 1e22.extenso
-    assert_equal "DOZE CÊNTIMOS", 0.12.extenso
+    assert_equal "DOZE CÊNTIMOS", 0.1.extenso
     assert_equal "MIL DUZENTOS E TRINTA E QUATRO EUROS E DEZ CÊNTIMOS", "1234.10".extenso
     assert_equal "DOZE MILHÕES DE EUROS E DOZE CÊNTIMOS", 12000000.12.extenso
     assert_equal "UM DÓLAR", 1.extenso(msingular:"DÓLAR")
