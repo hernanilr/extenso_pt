@@ -1,4 +1,4 @@
-# ExtensoPt
+# ExtensoPt [![Build Status](https://travis-ci.org/hernanilr/extenso_pt.svg?branch=master)](https://travis-ci.org/hernanilr/extenso_pt)
 
 Produz valores monetários por extenso em portugês de portugal ou brasil. Os valores podem ser um numerico ou uma string de digitos. O extenso pode ser produzido na escala longa (utilizada em todos os países lusófonos) ou na escala curta (utilizada no Brasil) [wiki](https://pt.wikipedia.org/wiki/Escalas_curta_e_longa). Pode ainda escolher a moeda e a fração da moeda.
 
