@@ -1,6 +1,6 @@
 # ExtensoPt [![Build Status](https://travis-ci.org/hernanilr/extenso_pt.svg?branch=master)](https://travis-ci.org/hernanilr/extenso_pt)
 
-Produz valores monetários por extenso em portugês de portugal ou brasil. Os valores podem ser um numerico ou uma string de digitos. O extenso pode ser produzido na escala longa (utilizada em todos os países lusófonos) ou na escala curta (utilizada no Brasil) [wiki](https://pt.wikipedia.org/wiki/Escalas_curta_e_longa). Pode ainda escolher a moeda e a fração da moeda.
+Produz valores monetários por extenso em portugês de portugal ou brasil. Os valores podem ser um numerico, uma string de digitos ou um conjunto destes (array, range, hash). O extenso pode ser produzido na escala longa (utilizada em todos os países lusófonos) ou na escala curta (utilizada no Brasil) [wiki](https://pt.wikipedia.org/wiki/Escalas_curta_e_longa). Pode ainda escolher a moeda e a fração da moeda.
 
 ## Installation
 
@@ -31,6 +31,12 @@ Or install it yourself as:
 1e10.extenso(mplural:"REAIS")                      => "DEZ MIL MILHÕES DE REAIS"      # portugal usa escala longa
 1e10.extenso(lc: :br)                              => "DEZ BILHÕES DE REAIS"          # brasil usa escala curta
 14.01.extenso(mplural:"REAIS",fplural:"CENTAVOS")  => "CATORZE REAIS E UM CENTAVO"    # singular inferido <plural> menos "S"
+(1..2).extenso                                     => ["UM EURO","DOIS EUROS"]        # extenso Range
+{a:1,b:2}.extenso                                  => ["UM EURO","DOIS EUROS"]        # extenso Hash
+["1","2"].extenso                                  => ["UM EURO","DOIS EUROS"]        # extenso Array
+[0.1,0.2].extenso                                  => ["DEZ CÊNTIMOS","VINTE CÊNTIMOS"]
+{a:[3,4],b:2}.extenso                              => [["TRÊS EUROS", "QUATRO EUROS"],"DOIS EUROS"] 
+
 ```
 
 ## Development

@@ -37,12 +37,20 @@ class ExtensoPtTest < Minitest::Test
     assert_equal "CATORZE REAIS E UM CENTAVO", 14.01.extenso(fplural:"CENTAVOS",mplural:"REAIS")
 
     # bigdecimal necessario para valores maiores 1e12 devido a aritmetica binaria interna
-    assert_equal "CEM MIL TRILIÕES DE EUROS", (10**23).extenso
-    assert_equal "CEM MIL TRILIÕES DE REAIS", (10**23).extenso(mplural:"REAIS")
-    assert_equal "CEM SEXTILHÕES DE REAIS",       1e23.extenso(lc: :br)
+    assert_equal "CEM MIL TRILIÕES DE EUROS", (10**23).extenso                  # escala longa
+    assert_equal "CEM MIL TRILIÕES DE REAIS", (10**23).extenso(mplural:"REAIS") # escala longa
+    assert_equal "CEM SEXTILHÕES DE REAIS",   (10**23).extenso(lc: :br)         # escala curta
 
     # limite maximo foi ultrapassado - 24 digitos
     assert_equal "", "111222333444555666777888999".extenso
 
+    # Teste de ojectos que renpondem a to_a (Array, Range, Hash)
+    assert_equal ["UM EURO","DOIS EUROS"], [1,2].extenso
+    assert_equal ["UM EURO E DEZ CÊNTIMOS","DOIS EUROS E VINTE CÊNTIMOS"], [1.1,2.2].extenso
+    assert_equal ["UM EURO","DOIS EUROS"], (1..2).extenso
+    assert_equal ["UM EURO","DOIS EUROS"], ["1","2"].extenso
+    assert_equal ["DEZ CÊNTIMOS","VINTE CÊNTIMOS"], [0.1,0.2].extenso
+    assert_equal ["UM EURO","DOIS EUROS"], {a:1,b:2}.extenso
+    assert_equal [["TRÊS EUROS", "QUATRO EUROS"],"DOIS EUROS"], {a:[3,4],b:2}.extenso
   end
 end

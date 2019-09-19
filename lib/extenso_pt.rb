@@ -98,7 +98,7 @@ module ExtensoPt
     end
   end
 
-  # Converte um objeto [String, Float, Integer] no seu extenso em portugûes de portugal ou brasil.
+  # Converte um objeto no seu extenso em portugûes de portugal ou brasil.
   #
   # @param [Hash] moeda as opcoes para parametrizar a moeda/fração
   # @option moeda [Symbol] :lc locale do extenso - portugûes de portugal (:pt) ou brasil (:br)
@@ -106,7 +106,7 @@ module ExtensoPt
   # @option moeda [String] :fsingular Fração no singular - por defeito pode ser obtida do <b>:fplural menos "S"</b> (se terminar em "S")
   # @option moeda [String] :mplural Moeda no plural - por defeito pode ser obtida do <b>:msingular+"S"</b>
   # @option moeda [String] :fplural Fração no plural - por defeito pode ser obtida do <b>:fsingular+"S"</b>
-  # @return [String] o extenso do objeto
+  # @return [String, Array<String>] extenso se o objecto for (String, Float, Integer) ou Array dos extensos se o objecto for (Array, Range, Hash)
   def extenso(moeda={lc:(:pt),msingular:"EURO",fsingular:"CÊNTIMO"})
     moeda={lc:(:br),msingular:"REAL",mplural:"REAIS",fsingular:"CENTAVO"} if (moeda[:lc]==:br&&!moeda[:mplural]&&!moeda[:fplural])
     @@lc=LC.include?(moeda[:lc])?moeda[:lc]:(:pt)
@@ -114,12 +114,19 @@ module ExtensoPt
     @@cs=moeda[:fsingular]?moeda[:fsingular]:moeda[:fplural].to_s[-1]=="S"?moeda[:fplural][0..-2]:"CÊNTIMO"
     @@mp=moeda[:mplural]?moeda[:mplural]:@@ms+"S"
     @@cp=moeda[:fplural]?moeda[:fplural]:@@cs+"S"
-    n=self.to_d.to_s("F")
-    @@ai=n[/^\d+/].to_s.reverse.scan(/\d{1,3}/).map{|i|i.reverse.to_i}
-    @@ai.count>8?"":ExtensoPt.erecursivo+ExtensoPt.fracao((n[/\.\d*/].to_f*100).round)
+    if (self.respond_to?:to_a)
+      self.to_a.map{|a|a.extenso(lc:(@@lc),msingular:@@ms,fsingular:@@cs,mplural:@@mp,fplural:@@cp)}
+    else
+      n=self.to_d.to_s('F')
+      @@ai=n[/^\d+/].to_s.reverse.scan(/\d{1,3}/).map{|i|i.reverse.to_i}
+      @@ai.count>8?"":ExtensoPt.erecursivo+ExtensoPt.fracao((n[/\.\d*/].to_f*100).round)
+    end
   end
 
 end
-class String; include ExtensoPt;end
+class Hash;   include ExtensoPt;def to_a;self.values;end;end
+class Array;  include ExtensoPt;end
+class Range;  include ExtensoPt;end
 class Float;  include ExtensoPt;end
 class Integer;include ExtensoPt;end
+class String; include ExtensoPt;end
