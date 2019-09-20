@@ -15,10 +15,10 @@ module ExtensoPt
   A1e24={pt: ["","MIL"," MILHÃO"," MIL MILHÃO"," BILIÃO"," MIL BILIÃO"," TRILIÃO"," MIL TRILIÃO",""," MIL"," MILHÕES"," MIL MILHÕES"," BILIÕES"," MIL BILIÕES"," TRILIÕES"," MIL TRILIÕES"],
          br: ["","MIL"," MILHÃO"," BILHÃO"," TRILHÃO"," QUADRILHÃO"," QUINTILHÃO"," SEXTILHÃO",""," MIL"," MILHÕES"," BILHÕES"," TRILHÕES"," QUADRILHÕES"," QUINTILHÕES"," SEXTILHÕES"]}
 
-  # Produz a moeda e o extenso da parte fracionaria do valor monetário em portugûes de portugal ou brasil.
+  # Produz a moeda e o extenso da parte fracionária do valor monetário em portugûes de portugal ou brasil.
   #
-  # @param [Integer] fracao parte fracionaria do valor monetário ex: 100022.12 = 12
-  # @return [String] a moeda e o extenso da parte fracionaria do valor monetário
+  # @param [Integer] fracao parte fracionária do valor monetário ex: 100022.12 = 12
+  # @return [String] a moeda e o extenso da parte fracionária do valor monetário
   def self.efracao(fracao)
     inteira=@@ai.find{|v|v>0}.to_i+@@ai[1..-1].to_a.find{|v|v>0}.to_i
     total=inteira+fracao
@@ -28,11 +28,11 @@ module ExtensoPt
     (fracao>0?fracao>1?" "+@@cp:" "+@@cs:"")
   end
 
-  # Produz o extenso dum valor (entre 0-999) em portugûes de portugal ou brasil.
+  # Produz o extenso dum grupo de 3 digitos em portugûes de portugal ou brasil.
   #
-  # @param [Integer] mil o valor a converter
-  # @param [Integer] pos posição actual de mil no valor monetário em tratamento
-  # @return [String] o extenso de mil
+  # @param [Integer] mil o valor dum grupo de 3 digitos a converter
+  # @param [Integer] pos posição deste grupo de 3 digitos no valor monetário em tratamento
+  # @return [String] o extenso de <mil>
   def self.e999(mil,pos=0)
     cem=mil%100
     A1000[@@lc][(mil>100?1:0)+mil/100]+(mil>100&&mil%100>0?" E ":"")+
@@ -40,18 +40,18 @@ module ExtensoPt
     A0020[@@lc][pos==1&&mil==1?0:cem<20?cem:cem%10]
   end
 
-  # Produz recursivamente o extenso da parte inteira do valor monetário em portugûes de portugal ou brasil.
+  # Produz o extenso da parte inteira do valor monetário em portugûes de portugal ou brasil.
   #
-  # @param [Integer] pos posição actual do valor monetário em tratamento
+  # @param [Integer] pos posição actual nos grupos de 3 digitos do valor monetário em tratamento
   # @param [String] ext extenso actual em tratamento
-  # @return [String] o extenso da parte inteira
-  def self.erecursivo(pos=0,ext="")
+  # @return [String] o extenso da parte inteira do valor monetário 
+  def self.einteira(pos=0,ext="")
     if (pos>=@@ai.count)
       ext
     else
       ctl=pos>0?@@ai[pos-1]:0
       ext=e999(@@ai[pos],pos)+A1e24[@@lc][@@ai[pos]>0?@@ai[pos]>1?8+pos:pos:0]+(ctl>100?" ":ctl>0?" E ":"")+ext
-      erecursivo(pos+1,ext)
+      einteira(pos+1,ext)
     end
   end
 
@@ -65,6 +65,7 @@ module ExtensoPt
   # @option moeda [String] :fplural Fração no plural - pode ser inferido do <b>:fsingular+"S"</b>
   # @return [String, Array<String>, Hash<String>] extenso se o objecto for (String, Float, Integer), Array dos extensos se o objecto for (Array, Range) ou Hash dos extensos se o objecto for (Hash)
   def extenso(moeda={lc:(:pt),msingular:"EURO",fsingular:"CÊNTIMO"})
+    # parametrização da moeda
     moeda={lc:(:br),msingular:"REAL",mplural:"REAIS",fsingular:"CENTAVO"} if (moeda[:lc]==:br&&!moeda[:mplural]&&!moeda[:fplural])
     @@lc=LC.include?(moeda[:lc])?moeda[:lc]:(:pt)
     @@ms=moeda[:msingular]?moeda[:msingular]:moeda[:mplural].to_s[-1]=="S"?moeda[:mplural][0..-2]:"EURO"
@@ -72,17 +73,23 @@ module ExtensoPt
     @@mp=moeda[:mplural]?moeda[:mplural]:@@ms+"S"
     @@cp=moeda[:fplural]?moeda[:fplural]:@@cs+"S"
     if (self.kind_of?Hash)
-      # converte os valores do Hash nos seus extensos mantendos as chaves devolve um Hash
+      # converte os valores do Hash nos seus extensos mantendo as chaves - devolve um Hash
       self.map{|k,v|[k,v.extenso(lc:(@@lc),msingular:@@ms,fsingular:@@cs,mplural:@@mp,fplural:@@cp)]}.to_h
     elsif (self.respond_to?:to_a)
-      # converte o objecto num Array e converte os valores nos seus extensos devolve um Array
+      # converte o objecto num Array e converte os valores nos seus extensos - devolve um Array
       self.to_a.map{|a|a.extenso(lc:(@@lc),msingular:@@ms,fsingular:@@cs,mplural:@@mp,fplural:@@cp)}
     else
       # converter com bigdecimal/util para evitar bugs com valores superiores a 1e12
       n=self.to_d.to_s('F')
       # dividir parte inteira em grupos de 3 digitos ex: 123022.12 => [22, 123]
       @@ai=n[/^\d+/].to_s.reverse.scan(/\d{1,3}/).map{|i|i.reverse.to_i}
-      @@ai.count>8?"":ExtensoPt.erecursivo+ExtensoPt.efracao((n[/\.\d*/].to_f*100).round)
+      if (@@ai.count>8)
+        "" # MAX 1e24
+      else
+        ExtensoPt.einteira+
+        # parte fracionária é arredondada a 2 casas decimais (cêntimos)
+        ExtensoPt.efracao((n[/\.\d*/].to_f*100).round)
+      end
     end
   end
 
