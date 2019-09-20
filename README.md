@@ -27,8 +27,8 @@ Or install it yourself as:
 10.1.extenso(mplural:"DÓLARES")                    => "DEZ DÓLARES E DEZ CÊNTIMOS"      # plural inferido <silgular> mais "S"
 14.01.extenso(mplural:"REAIS",fsingular:"CENTAVO") => "CATORZE REAIS E UM CENTAVO"
 14.10.extenso(mplural:"REAIS",fsingular:"CENTAVO") => "CATORZE REAIS E DEZ CENTAVOS"
-14.10.extenso(lc: :br)                             => "QUATORZE REAIS E DEZ CENTAVOS"
-1e10.extenso(mplural:"REAIS")                      => "DEZ MIL MILHÕES DE REAIS"        # portugal usa escala longa
+14.1.extenso(lc: :br)                              => "QUATORZE REAIS E DEZ CENTAVOS"
+1e10.extenso(lc: :pt,mplural:"REAIS")              => "DEZ MIL MILHÕES DE REAIS"        # portugal usa escala longa
 1e10.extenso(lc: :br)                              => "DEZ BILHÕES DE REAIS"            # brasil usa escala curta
 14.01.extenso(mplural:"REAIS",fplural:"CENTAVOS")  => "CATORZE REAIS E UM CENTAVO"      # singular inferido <plural> menos "S"
 ["1", "2"].extenso                                 => ["UM EURO","DOIS EUROS"]          # extenso Array
