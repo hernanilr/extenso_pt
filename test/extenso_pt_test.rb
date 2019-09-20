@@ -50,7 +50,7 @@ class ExtensoPtTest < Minitest::Test
     assert_equal ["UM EURO","DOIS EUROS"], (1..2).extenso
     assert_equal ["UM EURO","DOIS EUROS"], ["1","2"].extenso
     assert_equal ["DEZ CÊNTIMOS","VINTE CÊNTIMOS"], [0.1,0.2].extenso
-    assert_equal ["UM EURO","DOIS EUROS"], {a:1,b:2}.extenso
-    assert_equal [["TRÊS EUROS", "QUATRO EUROS"],"DOIS EUROS"], {a:[3,4],b:2}.extenso
+    assert_equal ({a:"UM EURO",b:"DOIS EUROS"}), {a:1,b:2}.extenso
+    assert_equal ({a:["TRÊS EUROS", "CATORZE EUROS"],b:"DOIS EUROS"}), {a:[3,14],b:2}.extenso
   end
 end

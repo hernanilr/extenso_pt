@@ -106,7 +106,7 @@ module ExtensoPt
   # @option moeda [String] :fsingular Fração no singular - por defeito pode ser obtida do <b>:fplural menos "S"</b> (se terminar em "S")
   # @option moeda [String] :mplural Moeda no plural - por defeito pode ser obtida do <b>:msingular+"S"</b>
   # @option moeda [String] :fplural Fração no plural - por defeito pode ser obtida do <b>:fsingular+"S"</b>
-  # @return [String, Array<String>] extenso se o objecto for (String, Float, Integer) ou Array dos extensos se o objecto for (Array, Range, Hash)
+  # @return [String, Array<String>, Hash<String>] extenso se o objecto for (String, Float, Integer), Array dos extensos se o objecto for (Array, Range) ou Hash dos extensos se o objecto for (Hash)
   def extenso(moeda={lc:(:pt),msingular:"EURO",fsingular:"CÊNTIMO"})
     moeda={lc:(:br),msingular:"REAL",mplural:"REAIS",fsingular:"CENTAVO"} if (moeda[:lc]==:br&&!moeda[:mplural]&&!moeda[:fplural])
     @@lc=LC.include?(moeda[:lc])?moeda[:lc]:(:pt)
@@ -114,7 +114,9 @@ module ExtensoPt
     @@cs=moeda[:fsingular]?moeda[:fsingular]:moeda[:fplural].to_s[-1]=="S"?moeda[:fplural][0..-2]:"CÊNTIMO"
     @@mp=moeda[:mplural]?moeda[:mplural]:@@ms+"S"
     @@cp=moeda[:fplural]?moeda[:fplural]:@@cs+"S"
-    if (self.respond_to?:to_a)
+    if (self.kind_of?Hash)
+      self.map{|k,v|[k,v.extenso(lc:(@@lc),msingular:@@ms,fsingular:@@cs,mplural:@@mp,fplural:@@cp)]}.to_h
+    elsif (self.respond_to?:to_a)
       self.to_a.map{|a|a.extenso(lc:(@@lc),msingular:@@ms,fsingular:@@cs,mplural:@@mp,fplural:@@cp)}
     else
       n=self.to_d.to_s('F')
@@ -124,7 +126,7 @@ module ExtensoPt
   end
 
 end
-class Hash;   include ExtensoPt;def to_a;self.values;end;end
+class Hash;   include ExtensoPt;end
 class Array;  include ExtensoPt;end
 class Range;  include ExtensoPt;end
 class Float;  include ExtensoPt;end

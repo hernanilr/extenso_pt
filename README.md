@@ -24,18 +24,18 @@ Or install it yourself as:
 "1234".extenso                                     => "MIL DUZENTOS E TRINTA E QUATRO EUROS"
 12000000.12.extenso                                => "DOZE MILHÕES DE EUROS E DOZE CÊNTIMOS"
 1.01.extenso(msingular:"DÓLAR")                    => "UM DÓLAR E UM CÊNTIMO"         
-10.1.extenso(mplural:"DÓLARES")                    => "DEZ DÓLARES E DEZ CÊNTIMOS"    # plural inferido <silgular> mais "S"
+10.1.extenso(mplural:"DÓLARES")                    => "DEZ DÓLARES E DEZ CÊNTIMOS"      # plural inferido <silgular> mais "S"
 14.01.extenso(mplural:"REAIS",fsingular:"CENTAVO") => "CATORZE REAIS E UM CENTAVO"
 14.10.extenso(mplural:"REAIS",fsingular:"CENTAVO") => "CATORZE REAIS E DEZ CENTAVOS"
 14.10.extenso(lc: :br)                             => "QUATORZE REAIS E DEZ CENTAVOS"
-1e10.extenso(mplural:"REAIS")                      => "DEZ MIL MILHÕES DE REAIS"      # portugal usa escala longa
-1e10.extenso(lc: :br)                              => "DEZ BILHÕES DE REAIS"          # brasil usa escala curta
-14.01.extenso(mplural:"REAIS",fplural:"CENTAVOS")  => "CATORZE REAIS E UM CENTAVO"    # singular inferido <plural> menos "S"
-(1..2).extenso                                     => ["UM EURO","DOIS EUROS"]        # extenso Range
-{:a => 1,:b => 2}.extenso                          => ["UM EURO","DOIS EUROS"]        # extenso Hash
-["1", "2"].extenso                                 => ["UM EURO","DOIS EUROS"]        # extenso Array
-[0.1, 0.2].extenso                                 => ["DEZ CÊNTIMOS","VINTE CÊNTIMOS"]
-{:a => [3, 4],:b => 2}.extenso                     => [["TRÊS EUROS", "QUATRO EUROS"],"DOIS EUROS"] 
+1e10.extenso(mplural:"REAIS")                      => "DEZ MIL MILHÕES DE REAIS"        # portugal usa escala longa
+1e10.extenso(lc: :br)                              => "DEZ BILHÕES DE REAIS"            # brasil usa escala curta
+14.01.extenso(mplural:"REAIS",fplural:"CENTAVOS")  => "CATORZE REAIS E UM CENTAVO"      # singular inferido <plural> menos "S"
+["1", "2"].extenso                                 => ["UM EURO","DOIS EUROS"]          # extenso Array
+[0.1, 0.2].extenso                                 => ["DEZ CÊNTIMOS","VINTE CÊNTIMOS"] # extenso Array
+(1..2).extenso                                     => ["UM EURO","DOIS EUROS"]          # extenso Range
+{:a => 1,:b => 2}.extenso                          => {:a=>"UM EURO",:b=>"DOIS EUROS"}  # extenso Hash
+{:a => [3, 4],:b => 2}.extenso                     => {:a=>["TRÊS EUROS", "QUATRO EUROS"],:b=>"DOIS EUROS"} 
 
 ```
 
