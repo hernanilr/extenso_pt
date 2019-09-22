@@ -51,7 +51,7 @@ module ExtensoPt
         ext+=e999(@@nf)                                     # extenso da parte fracionária
         ext+=" "+@@cs if (@@nf==1)                          # singular da parte fracionária
         ext+=" "+@@cp if (@@nf>1)                           # plural da parte fracionária
-	ext
+        ext
       end
     else
       # tratamento do grupo actual 3 digitos
@@ -60,8 +60,8 @@ module ExtensoPt
 
       # convenção de separação com grupo anterior 3 digitos
       if (pos>0)
-	dg3+=" E " if (@@ai[pos-1]<101&&@@ai[pos-1]>0)      # grupo < 101 => proposição E
-	dg3+=" "   if (@@ai[pos-1]>100)                     # grupo > 100 => espaço
+        dg3+=" E " if (@@ai[pos-1]<101&&@@ai[pos-1]>0)      # grupo < 101 => proposição E
+        dg3+=" "   if (@@ai[pos-1]>100)                     # grupo > 100 => espaço
       end
 
       # tratamento do proximo grupo 3 digitos
