@@ -12,14 +12,14 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/hernanilr/extenso_pt'
   spec.license       = 'MIT'
 
+  spec.summary = 'Produz valores monetários por extenso '\
+  'em portugês de portugal ou brasil.'
 
-  spec.summary = 'Produz valores monetários por extenso\
-  em portugês de portugal ou brasil.'
-  spec.description = spec.summary + ' Os valores podem ser um numerico, uma\
-  string de digitos ou um conjunto destes (array, range, hash). O extenso\
-  pode ser produzido na escala longa (utilizada em todos os países\
-  lusófonos) ou na escala curta (utilizada no Brasil). Pode ainda escolher\
-  a moeda e a fração da moeda.'
+  spec.description = spec.summary + ' Os valores podem ser um numerico, uma '\
+  'string de digitos ou um conjunto destes (array, range, hash). O extenso '\
+  'pode ser produzido na escala longa (utilizada em todos os países '\
+  'lusófonos) ou na escala curta (utilizada no Brasil). Pode ainda escolher '\
+  'a moeda e a fração da moeda.'
 
   spec.metadata['yard.run'] = 'yard' # use "yard" to build full HTML docs.
   spec.metadata['homepage_uri'] = spec.homepage
