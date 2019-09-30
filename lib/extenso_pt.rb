@@ -128,6 +128,7 @@ module ExtensoPt
 
   # Parametrizar controle singular/plural & proposicoes
   #
+  # @return [void]
   def self.pcontrolo
     # soma grupos 1,2 (primeiros 6 digitos)
     @s6 = @ai[0].to_i + @ai[1].to_i * 2
@@ -159,6 +160,7 @@ module ExtensoPt
   # Parametrizar parte inteira/fracionaria do valor monetario
   #
   # @param [String] dig string de digitos rdo valor monetario
+  # @return [void]
   def self.pintfra(dig)
     # parte inteira do valor monetario => array grupos 3 digitos
     #  ex: 123022.12 => [22, 123]
@@ -174,16 +176,17 @@ module ExtensoPt
   #
   # @param [Object] objeto objeto a converter
   #  (String, Float, Integer, Array, Range, Hash)
-  # @return [String] extenso se objecto for (String, Float, Integer),
-  #  Array<extensos> se objecto for (Array, Range),
-  #  Hash<extensos> se objecto for (Hash)
-  def self.pobjeto(obj)
+  # @return [String, Array<extensos>, Hash<extensos>] string extenso
+  #  se objecto for (String, Float, Integer),
+  #  array se objecto for (Array, Range),
+  #  hash se objecto for (Hash)
+  def self.eobjeto(obj)
     if obj.is_a?(Hash)
       # converte os valores do Hash nos seus extensos - devolve um Hash
-      obj.map { |k, v| [k, pobjeto(v)] }.to_h
+      obj.map { |k, v| [k, eobjeto(v)] }.to_h
     elsif obj.respond_to?(:to_a)
       # converte o objecto num Array com os extensos dos valores
-      obj.to_a.map { |v| pobjeto(v) }
+      obj.to_a.map { |v| eobjeto(v) }
     else
       # converte objeto numa string de digitos
       # usa bigdecimal/util para evitar aritmetica binaria
@@ -210,7 +213,8 @@ module ExtensoPt
   #  inferido do plural menos "S"
   # @option moeda [String] :mplural moeda no plural
   # @option moeda [String] :fplural fracao no plural
-  def self.isingular(moeda)
+  # @return [void]
+  def self.psingular(moeda)
     @ms = moeda[:msingular] ||
           (moeda[:mplural].to_s[-1] == 'S' ? moeda[:mplural][0..-2] : 'EURO')
     @cs = moeda[:fsingular] ||
@@ -228,7 +232,8 @@ module ExtensoPt
   #  inferido do singular mais "S"
   # @option moeda [String] :fplural fracao no plural -
   #  inferido do singular mais "S"
-  def self.iplural(moeda)
+  # @return [void]
+  def self.pplural(moeda)
     # somente [:pt, :br]
     @lc = LC.include?(moeda[:lc]) ? moeda[:lc] : :pt
 
@@ -245,9 +250,10 @@ module ExtensoPt
   # @option moeda [String] :fsingular fracao no singular
   # @option moeda [String] :mplural moeda no plural
   # @option moeda [String] :fplural fracao no plural
-  # @return [String] extenso se objecto for (String, Float, Integer),
-  #  Array<extensos> se objecto for (Array, Range),
-  #  Hash<extensos> se objecto for (Hash)
+  # @return [String, Array<extensos>, Hash<extensos>] string extenso
+  #  se objecto for (String, Float, Integer),
+  #  array se objecto for (Array, Range),
+  #  hash se objecto for (Hash)
   def extenso(moeda = { lc: :pt, msingular: 'EURO', fsingular: 'CÊNTIMO' })
     # parametrizacao por defeito para :br
     if moeda[:lc] == :br && !moeda[:msingular] && !moeda[:mplural]
@@ -255,11 +261,11 @@ module ExtensoPt
     end
 
     # parametrizar moeda
-    ExtensoPt.isingular(moeda)
-    ExtensoPt.iplural(moeda)
+    ExtensoPt.psingular(moeda)
+    ExtensoPt.pplural(moeda)
 
-    # processar objeto
-    ExtensoPt.pobjeto(self)
+    # extenso do objeto
+    ExtensoPt.eobjeto(self)
   end
 end
 

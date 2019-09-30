@@ -27,7 +27,7 @@ class ExtensoPtTest < Minitest::Test
   end
 
   def test_use1
-    # por defeito o singular da fracao e CENTIMO e plural <singular>+"S"
+    # por defeito o singular da fracao e CENTIMO e plural <singular>+'S'
     assert_equal 'UM DÓLAR E UM CÊNTIMO', 1.010.extenso(msingular: 'DÓLAR')
     assert_equal 'DEZ DÓLARES E DEZ CÊNTIMOS',
                  10.10.extenso(mplural: 'DÓLARES')
@@ -36,7 +36,7 @@ class ExtensoPtTest < Minitest::Test
     assert_equal 'QUATORZE REAIS E DEZ CENTAVOS', 14.10.extenso(lc: :br)
     assert_equal 'DEZ MIL MILHÕES DE REAIS', 1e10.extenso(mplural: 'REAIS')
     assert_equal 'DEZ BILHÕES DE REAIS', 1e10.extenso(lc: :br)
-    # por defeito o singular e <plural> menos o "S"
+    # por defeito o singular e <plural> menos o 'S'
     assert_equal 'CATORZE REAIS E UM CENTAVO',
                  14.01.extenso(fplural: 'CENTAVOS', mplural: 'REAIS')
   end
@@ -77,5 +77,17 @@ class ExtensoPtTest < Minitest::Test
     assert_equal ({ a: 'UM EURO', b: 'DOIS EUROS' }), { a: 1, b: 2 }.extenso
     assert_equal ({ a: ['TRÊS EUROS', 'CATORZE EUROS'], b: 'DOIS EUROS' }),
                  { a: [3, 14], b: 2 }.extenso
+  end
+
+  def test_unidades
+    assert_equal ['TRÊS EUROS', 'QUATRO EUROS', 'CINCO EUROS', 'SEIS EUROS',
+                  'SETE EUROS', 'OITO EUROS', 'NOVE EUROS', 'DEZ EUROS',
+                  'ONZE EUROS', 'DOZE EUROS', 'TREZE EUROS', 'CATORZE EUROS',
+                  'QUINZE EUROS', 'DEZASSEIS EUROS', 'DEZASSETE EUROS',
+                  'DEZOITO EUROS', 'DEZANOVE EUROS',
+                  'VINTE EUROS', 'VINTE E UM EUROS', 'VINTE E DOIS EUROS',
+                  'VINTE E TRÊS EUROS', 'VINTE E QUATRO EUROS',
+                  'VINTE E CINCO EUROS', 'VINTE E SEIS EUROS'],
+                 (3..26).extenso
   end
 end
