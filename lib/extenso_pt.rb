@@ -24,14 +24,14 @@ A1000 = {
   br: ['', 'CEM', 'CENTO', 'DUZENTOS', 'TREZENTOS', 'QUATROCENTOS',
        'QUINHENTOS', 'SEISCENTOS', 'SETECENTOS', 'OITOCENTOS', 'NOVECENTOS']
 }.freeze
-A1E24 = {
-  pt: ['', 'MIL', ' MILHÃO', ' MIL MILHÃO', ' BILIÃO', ' MIL BILIÃO',
-       ' TRILIÃO', ' MIL TRILIÃO', '', ' MIL', ' MILHÕES', ' MIL MILHÕES',
-       ' BILIÕES', ' MIL BILIÕES', ' TRILIÕES', ' MIL TRILIÕES'],
-  br: ['', 'MIL', ' MILHÃO', ' BILHÃO', ' TRILHÃO', ' QUADRILHÃO',
-       ' QUINTILHÃO', ' SEXTILHÃO', '', ' MIL', ' MILHÕES', ' BILHÕES',
-       ' TRILHÕES', ' QUADRILHÕES', ' QUINTILHÕES', ' SEXTILHÕES']
-}.freeze
+S1E24 = { pt: ['', 'MIL', ' MILHÃO', ' MIL MILHÃO', ' BILIÃO',
+               ' MIL BILIÃO', ' TRILIÃO', ' MIL TRILIÃO'],
+          br: ['', 'MIL', ' MILHÃO', ' BILHÃO', ' TRILHÃO',
+               ' QUADRILHÃO', ' QUINTILHÃO', ' SEXTILHÃO'] }.freeze
+P1E24 = { pt: ['', ' MIL', ' MILHÕES', ' MIL MILHÕES', ' BILIÕES',
+               ' MIL BILIÕES', ' TRILIÕES', ' MIL TRILIÕES'],
+          br: ['', ' MIL', ' MILHÕES', ' BILHÕES', ' TRILHÕES',
+               ' QUADRILHÕES', ' QUINTILHÕES', ' SEXTILHÕES'] }.freeze
 
 # @author Hernani Rodrigues Vaz
 module ExtensoPt
@@ -43,7 +43,7 @@ module ExtensoPt
   # @return [String] o extenso das centenas
   def self.e900(mil)
     A1000[@lc][(mil > 100 ? 1 : 0) + mil / 100] +
-      (mil > 100 && (mil % 100).positive? ? ' E ' : '')
+      (mil > 100 && (mil % 100).positive? ? ' E ' : '') # proposicao
   end
 
   # Produz o extenso das dezenas em portugues de portugal ou brasil.
@@ -51,7 +51,8 @@ module ExtensoPt
   # @param [Integer] mil o valor dum grupo 3 digitos a converter
   # @return [String] o extenso das dezenas
   def self.e90(mil)
-    A0100[@lc][mil % 100 / 10] + (mil > 20 && (mil % 10).positive? ? ' E ' : '')
+    A0100[@lc][mil % 100 / 10] +
+      (mil > 20 && (mil % 10).positive? ? ' E ' : '') # proposicao
   end
 
   # Produz o extenso das unidades em portugues de portugal ou brasil.
@@ -104,7 +105,7 @@ module ExtensoPt
   # @return [String] qualificador grupo de 3 digitos
   def self.e1e24(pos)
     if @ai[pos].positive?
-      A1E24[@lc][@ai[pos] > 1 ? 8 + pos : pos]
+      @ai[pos] > 1 ? P1E24[@lc][pos] : S1E24[@lc][pos]
     else
       ''
     end
@@ -168,9 +169,6 @@ module ExtensoPt
     # arredondada a 2 casas decimais (centimos/centavos)
     @nf = (dig[/\.\d*/].to_f * 100).round
   end
-
-  private_class_method :pintfra, :pcontrolo, :esep, :edg3, :e1e24,
-                       :e900, :e90, :e9, :ef99, :efim
 
   # Converte um objeto criando extenso(s) em portugues de portugal ou brasil.
   #
