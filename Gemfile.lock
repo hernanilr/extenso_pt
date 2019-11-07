@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    extenso_pt (0.5.7)
+    extenso_pt (0.5.8)
       bigdecimal (~> 1.4.4)
 
 GEM
