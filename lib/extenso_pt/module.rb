@@ -211,7 +211,7 @@ module ExtensoPt
   # @return [void]
   def self.pplural(moeda)
     # somente [:pt, :br]
-    @lc = LC.include?(moeda[:lc]) ? moeda[:lc] : :pt
+    @lc = EXTLC.include?(moeda[:lc]) ? moeda[:lc] : :pt
 
     @mp = moeda[:mplural] || @ms + 'S'
     @cp = moeda[:fplural] || @cs + 'S'
