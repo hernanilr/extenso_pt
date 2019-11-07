@@ -12,14 +12,14 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/hernanilr/extenso_pt'
   spec.license       = 'MIT'
 
-  spec.summary = 'Produz valores monetários por extenso '\
-  'em portugês de portugal ou brasil.'
-
-  spec.description = spec.summary + ' Os valores podem ser um numerico, uma '\
-  'string de digitos ou um conjunto destes (array, range, hash). O extenso '\
-  'pode ser produzido na escala longa (utilizada em todos os países '\
-  'lusófonos) ou na escala curta (utilizada no Brasil). Pode ainda escolher '\
-  'a moeda e a fração da moeda.'
+  spec.summary = 'Converte valores monetários em extenso de portugês de ' \
+    'portugal, brasil ou numeracao romana.'
+  spec.description = spec.summary
+  spec.description += ' Os valores podem ser um numerico, uma string ' \
+    'de digitos ou um conjunto destes (array, range, hash). O extenso ' \
+    'pode ser produzido na escala longa (utilizada em todos os países ' \
+    'lusófonos) ou na escala curta (utilizada no Brasil). Pode ainda ' \
+    'converter os valores em numeracao romana e vice versa.'
 
   spec.metadata['yard.run'] = 'yard' # use "yard" to build full HTML docs.
   spec.metadata['homepage_uri'] = spec.homepage
@@ -34,8 +34,9 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_development_dependency 'bigdecimal', '~> 1.4.4'
   spec.add_development_dependency 'bundler', '~> 1.17'
   spec.add_development_dependency 'minitest', '~> 5.0'
   spec.add_development_dependency 'rake', '~> 10.0'
+
+  spec.add_dependency 'bigdecimal', '~> 1.4.4'
 end

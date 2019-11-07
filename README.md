@@ -1,6 +1,6 @@
 # ExtensoPt [![Build Status](https://travis-ci.org/hernanilr/extenso_pt.svg?branch=master)](https://travis-ci.org/hernanilr/extenso_pt)
 
-Produz valores monetários por extenso em portugês de portugal ou brasil. Os valores podem ser um numerico, uma string de digitos ou um conjunto destes (array, range, hash). O extenso pode ser produzido na escala longa (utilizada em todos os países lusófonos) ou na escala curta (utilizada no Brasil) [wiki](https://pt.wikipedia.org/wiki/Escalas_curta_e_longa). Pode ainda escolher a moeda e a fração da moeda.
+Converte valores monetários em extenso de portugês de portugal, brasil ou numeracao romana. Os valores podem ser um numerico, uma string de digitos ou um conjunto destes (array, range, hash). O extenso pode ser produzido na escala longa (utilizada em todos os países lusófonos) ou na escala curta (utilizada no Brasil) [wiki](https://pt.wikipedia.org/wiki/Escalas_curta_e_longa). Pode ainda converter os valores em numeracao romana e vice versa.
 
 ## Installation
 
@@ -21,7 +21,9 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-"1234".extenso                                     => "MIL DUZENTOS E TRINTA E QUATRO EUROS"
+1234.extenso                                       => "MIL DUZENTOS E TRINTA E QUATRO EUROS"
+1234.romana                                        => "MCCXXXIV" 
+"MCCXXXIV".romana                                  => 1234
 12000000.12.extenso                                => "DOZE MILHÕES DE EUROS E DOZE CÊNTIMOS"
 1.01.extenso(msingular:"DÓLAR")                    => "UM DÓLAR E UM CÊNTIMO"         
 10.1.extenso(mplural:"DÓLARES")                    => "DEZ DÓLARES E DEZ CÊNTIMOS"      # plural inferido <silgular> mais "S"

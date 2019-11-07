@@ -3,18 +3,40 @@
 require 'test_helper'
 
 class ExtensoPtTest < Minitest::Test
-  def test_version_number
+  def test_contantes
     refute_nil ::ExtensoPt::VERSION
+    refute_nil ::ExtensoPt::EXTLC
+    refute_nil ::ExtensoPt::A0020
+    refute_nil ::ExtensoPt::A0100
+    refute_nil ::ExtensoPt::A1000
+    refute_nil ::ExtensoPt::S1E24
+    refute_nil ::ExtensoPt::P1E24
+    refute_nil ::ExtensoPt::ROMAN
+    refute_nil ::ExtensoPt::RO_RE
   end
 
   def test_basico
-    assert_equal 'ZERO EUROS', '0'.extenso
-    assert_equal 'ZERO REAIS', 0.extenso(lc: :br)
-    assert_equal 'DOZE CÊNTIMOS', 0.12.extenso
-    assert_equal 'MIL EUROS', 1000.extenso
+    assert_equal 'ZERO EUROS', 0.extenso
+    assert_equal 'VINTE REAIS', 20.extenso(lc: :br)
+    assert_equal 'CENTO E ONZE EUROS', 111.extenso
+    assert_equal 'CENTO E VINTE E UM EUROS', 121.extenso
+    assert_equal 'MIL E CEM EUROS', 1100.extenso
+    assert_equal 'MIL CENTO E ONZE EUROS', 1111.extenso
     assert_equal 'MIL DUZENTOS E TRINTA E QUATRO EUROS', 1234.extenso
-    assert_equal 'MIL DUZENTOS E TRINTA E QUATRO EUROS E DEZ CÊNTIMOS',
-                 '1234.10'.extenso
+  end
+
+  def test_romana
+    assert_equal 'MCCXXXIV', 1234.romana
+    assert_equal 'MCMLXVII', 1967.romana
+    assert_equal 'MCMXXVII', '1927'.romana
+    assert_equal 1234, 'MCCXXXIV'.romana
+    assert_equal 1967, 'MCMLXVII'.romana
+    assert_equal 1967, 1967.romana.romana
+  end
+
+  def test_romana?
+    assert_equal true, 'MCCXXXIV'.romana?
+    assert_equal false, 'lixo'.romana?
   end
 
   def test_basico2
@@ -27,16 +49,18 @@ class ExtensoPtTest < Minitest::Test
   end
 
   def test_use1
-    # por defeito o singular da fracao e CENTIMO e plural <singular>+'S'
     assert_equal 'UM DÓLAR E UM CÊNTIMO', 1.010.extenso(msingular: 'DÓLAR')
     assert_equal 'DEZ DÓLARES E DEZ CÊNTIMOS',
                  10.10.extenso(mplural: 'DÓLARES')
+    # por defeito <plural> = <singular> mais 'S'
     assert_equal 'CATORZE REAIS E DEZ CENTAVOS',
                  14.10.extenso(mplural: 'REAIS', fsingular: 'CENTAVO')
-    assert_equal 'QUATORZE REAIS E DEZ CENTAVOS', 14.10.extenso(lc: :br)
+    assert_equal 'QUATORZE REAIS E UM CENTAVO', 14.01.extenso(lc: :br)
+    # por defeiro :pt usa escala longa
     assert_equal 'DEZ MIL MILHÕES DE REAIS', 1e10.extenso(mplural: 'REAIS')
+    # por defeiro :br usa escala curta
     assert_equal 'DEZ BILHÕES DE REAIS', 1e10.extenso(lc: :br)
-    # por defeito o singular e <plural> menos o 'S'
+    # por defeito <singular> = <plural> menos 'S'
     assert_equal 'CATORZE REAIS E UM CENTAVO',
                  14.01.extenso(fplural: 'CENTAVOS', mplural: 'REAIS')
   end
@@ -55,26 +79,30 @@ class ExtensoPtTest < Minitest::Test
   end
 
   def test_use3
-    # bigdecimal para valores maiores 1e12 devido a aritmetica binaria interna
-    assert_equal 'CEM MIL TRILIÕES DE EUROS', (10**23).extenso # escala longa
+    # para evitar problemas aritmetica virgula flutuante usar sempre
+    #  string digitos para valores monetarios >1e12
+    assert_equal 'DEZ BILIÕES DE EUROS E DEZ CÊNTIMOS',
+                 10_000_000_000_000.14.extenso
+    assert_equal 'DEZ BILIÕES DE EUROS E CATORZE CÊNTIMOS',
+                 '10000000000000.14'.extenso
     assert_equal 'CEM MIL TRILIÕES DE REAIS',
                  (10**23).extenso(mplural: 'REAIS') # escala longa
     assert_equal 'CEM SEXTILHÕES DE REAIS',
                  (10**23).extenso(lc: :br) # escala curta
 
     # limite maximo foi ultrapassado - 24 digitos
-    assert_equal '', '111222333444555666777888999'.extenso
+    assert_equal '', '1112223334445556667778889'.extenso
   end
 
   def test_use4
     # Teste de ojectos que renpondem a to_a (Array, Range, Hash)
+    assert_equal ({ a: 'UM EURO', b: 'DOIS EUROS' }), { a: 1, b: 2 }.extenso
     assert_equal ['UM EURO', 'DOIS EUROS'], [1, 2].extenso
     assert_equal ['UM EURO E DEZ CÊNTIMOS', 'DOIS EUROS E VINTE CÊNTIMOS'],
                  [1.1, 2.2].extenso
     assert_equal ['UM EURO', 'DOIS EUROS'], (1..2).extenso
     assert_equal ['UM EURO', 'DOIS EUROS'], %w[1 2].extenso
     assert_equal ['DEZ CÊNTIMOS', 'VINTE CÊNTIMOS'], [0.1, 0.2].extenso
-    assert_equal ({ a: 'UM EURO', b: 'DOIS EUROS' }), { a: 1, b: 2 }.extenso
     assert_equal ({ a: ['TRÊS EUROS', 'CATORZE EUROS'], b: 'DOIS EUROS' }),
                  { a: [3, 14], b: 2 }.extenso
   end

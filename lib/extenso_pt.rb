@@ -1,247 +1,15 @@
 # frozen_string_literal: true
 
-require 'extenso_pt/version'
 require 'bigdecimal/util'
-
-LC = %i[pt br].freeze
-A0020 = {
-  pt: ['', 'UM', 'DOIS', 'TRÊS', 'QUATRO', 'CINCO', 'SEIS', 'SETE',
-       'OITO', 'NOVE', 'DEZ', 'ONZE', 'DOZE', 'TREZE', 'CATORZE',
-       'QUINZE', 'DEZASSEIS', 'DEZASSETE', 'DEZOITO', 'DEZANOVE'],
-  br: ['', 'UM', 'DOIS', 'TRES', 'QUATRO', 'CINCO', 'SEIS', 'SETE',
-       'OITO', 'NOVE', 'DEZ', 'ONZE', 'DOZE', 'TREZE', 'QUATORZE',
-       'QUINZE', 'DEZESSEIS', 'DEZESSETE', 'DEZOITO', 'DEZENOVE']
-}.freeze
-A0100 = {
-  pt: ['', '', 'VINTE', 'TRINTA', 'QUARENTA', 'CINQUENTA', 'SESSENTA',
-       'SETENTA', 'OITENTA', 'NOVENTA'],
-  br: ['', '', 'VINTE', 'TRINTA', 'QUARENTA', 'CINQUENTA', 'SESSENTA',
-       'SETENTA', 'OITENTA', 'NOVENTA']
-}.freeze
-A1000 = {
-  pt: ['', 'CEM', 'CENTO', 'DUZENTOS', 'TREZENTOS', 'QUATROCENTOS',
-       'QUINHENTOS', 'SEISCENTOS', 'SETECENTOS', 'OITOCENTOS', 'NOVECENTOS'],
-  br: ['', 'CEM', 'CENTO', 'DUZENTOS', 'TREZENTOS', 'QUATROCENTOS',
-       'QUINHENTOS', 'SEISCENTOS', 'SETECENTOS', 'OITOCENTOS', 'NOVECENTOS']
-}.freeze
-S1E24 = { pt: ['', 'MIL', ' MILHÃO', ' MIL MILHÃO', ' BILIÃO',
-               ' MIL BILIÃO', ' TRILIÃO', ' MIL TRILIÃO'],
-          br: ['', 'MIL', ' MILHÃO', ' BILHÃO', ' TRILHÃO',
-               ' QUADRILHÃO', ' QUINTILHÃO', ' SEXTILHÃO'] }.freeze
-P1E24 = { pt: ['', ' MIL', ' MILHÕES', ' MIL MILHÕES', ' BILIÕES',
-               ' MIL BILIÕES', ' TRILIÕES', ' MIL TRILIÕES'],
-          br: ['', ' MIL', ' MILHÕES', ' BILHÕES', ' TRILHÕES',
-               ' QUADRILHÕES', ' QUINTILHÕES', ' SEXTILHÕES'] }.freeze
+require 'extenso_pt/version'
+require 'extenso_pt/constantes'
+require 'extenso_pt/module'
 
 # @author Hernani Rodrigues Vaz
 module ExtensoPt
   class Error < StandardError; end
 
-  # Produz o extenso das centenas em portugues de portugal ou brasil.
-  #
-  # @param [Integer] mil o valor dum grupo 3 digitos a converter
-  # @return [String] o extenso das centenas
-  def self.e900(mil)
-    A1000[@lc][(mil > 100 ? 1 : 0) + mil / 100] +
-      (mil > 100 && (mil % 100).positive? ? ' E ' : '') # proposicao
-  end
-
-  # Produz o extenso das dezenas em portugues de portugal ou brasil.
-  #
-  # @param [Integer] mil o valor dum grupo 3 digitos a converter
-  # @return [String] o extenso das dezenas
-  def self.e90(mil)
-    A0100[@lc][mil % 100 / 10] +
-      (mil > 20 && (mil % 10).positive? ? ' E ' : '') # proposicao
-  end
-
-  # Produz o extenso das unidades em portugues de portugal ou brasil.
-  #
-  # @param [Integer] cem o valor dum grupo 3 digitos a converter
-  # @return [String] o extenso das unidades
-  def self.e9(cem)
-    A0020[@lc][(cem < 20 ? cem : cem % 10)]
-  end
-
-  # Produz extenso parte fracionaria em portugues de portugal ou brasil.
-  #
-  # @return [String] o extenso da parte fracionaria dum valor monetario
-  def self.ef99
-    if @nf.positive?
-      e90(@nf) + e9(@nf) + (@nf > 1 ? ' ' + @cp : ' ' + @cs)
-    else
-      ''
-    end
-  end
-
-  # Produz final da moeda em portugues de portugal ou brasil.
-  #
-  # @return [String] o final da moeda
-  def self.efim
-    # proposicao DE entre parte inteira e moeda
-    emo = @de ? ' DE' : ''
-    # moeda singular/plural
-    emo += @tt > 1 ? ' ' + @mp : ' ' + @ms if @tt.positive?
-    # proposicao E entre moeda e parte fracionaria
-    # extenso da parte fracionaria
-    emo + (@tt.positive? && @nf.positive? ? ' E ' : '') + ef99
-  end
-
-  # Produz separador entre grupos 3 digitos
-  #
-  # @param [Integer] pos posicao actual nos grupos 3 digitos do valor monetario
-  # @return [String] separador entre grupos 3 digitos
-  def self.esep(pos)
-    if pos.positive? && @ai[pos - 1].positive?
-      @ai[pos - 1] > 100 ? ' ' : ' E '
-    else
-      ''
-    end
-  end
-
-  # Produz qualificador grupo de 3 digitos em portugues de portugal ou brasil.
-  #
-  # @param [Integer] pos posicao actual nos grupos 3 digitos do valor monetario
-  # @return [String] qualificador grupo de 3 digitos
-  def self.e1e24(pos)
-    if @ai[pos].positive?
-      @ai[pos] > 1 ? P1E24[@lc][pos] : S1E24[@lc][pos]
-    else
-      ''
-    end
-  end
-
-  # Produz extenso grupo 3 digitos em portugues de portugal ou brasil.
-  #
-  # @param [Integer] pos posicao actual nos grupos 3 digitos do valor monetario
-  # @return [String] extenso grupo 3 digitos
-  def self.edg3(pos)
-    dg3 = if pos == 1 && @ai[pos] == 1
-            # caso especial MIL EUROS
-            ''
-          else
-            e900(@ai[pos]) + e90(@ai[pos]) + e9(@ai[pos] % 100)
-          end
-    # qualificador grupo de 3 digitos
-    dg3 + e1e24(pos)
-  end
-
-  # Parametrizar controle singular/plural & proposicoes
-  #
-  # @return [void]
-  def self.pcontrolo
-    # soma grupos 1,2 (primeiros 6 digitos)
-    @s6 = @ai[0].to_i + @ai[1].to_i * 2
-    # soma grupos 3.. (digitos acima de 6)
-    @m6 = @ai[2..-1].to_a.inject(:+).to_i * 2
-    @tt = @s6 + @m6                  # proposicao E & singular/plural
-    @de = @s6.zero? && @m6.positive? # proposicao DE
-  end
-
-  # Produz o extenso dum valor monetario em portugues de portugal ou brasil.
-  #
-  # @param [Integer] pos posicao actual nos grupos 3 digitos do valor monetario
-  # @param [String] ext extenso  em construcao
-  # @return [String] o extenso dum valor monetario
-  def self.enumerico(pos = 0, ext = '')
-    # testa fim do valor monetario
-    if pos >= @ai.count
-      # parametrizar controle singular/plural & proposicoes
-      pcontrolo
-
-      # caso especial zero
-      (@tt + @nf).zero? ? 'ZERO ' + @mp : ext + efim
-    else
-      # tratamento do proximo grupo 3 digitos
-      enumerico(pos + 1, edg3(pos) + esep(pos) + ext)
-    end
-  end
-
-  # Parametrizar parte inteira/fracionaria do valor monetario
-  #
-  # @param [String] dig string de digitos rdo valor monetario
-  # @return [void]
-  def self.pintfra(dig)
-    # parte inteira do valor monetario => array grupos 3 digitos
-    #  ex: 123022.12 => [22, 123]
-    @ai = dig[/^\d+/].to_s.reverse.scan(/\d{1,3}/).map { |i| i.reverse.to_i }
-
-    # parte fracionaria do valor monetario
-    #  ex: 123022.12 => 12
-    # arredondada a 2 casas decimais (centimos/centavos)
-    @nf = (dig[/\.\d*/].to_f * 100).round
-  end
-
-  # Converte um objeto criando extenso(s) em portugues de portugal ou brasil.
-  #
-  # @param [Object] objeto objeto a converter
-  #  (String, Float, Integer, Array, Range, Hash)
-  # @return [String, Array<extensos>, Hash<extensos>] string extenso
-  #  se objecto for (String, Float, Integer),
-  #  array se objecto for (Array, Range),
-  #  hash se objecto for (Hash)
-  def self.eobjeto(obj)
-    if obj.is_a?(Hash)
-      # converte os valores do Hash nos seus extensos - devolve um Hash
-      obj.map { |k, v| [k, eobjeto(v)] }.to_h
-    elsif obj.respond_to?(:to_a)
-      # converte o objecto num Array com os extensos dos valores
-      obj.to_a.map { |v| eobjeto(v) }
-    else
-      # converte objeto numa string de digitos
-      # usa bigdecimal/util para evitar aritmetica binaria
-      #  (tem problemas com valores >1e12)
-      # qualquer valor nao convertivel (ex: texto) resulta em "0.0"
-      sdigitos = obj.to_d.to_s('F')
-
-      # parametrizar parte inteira/fracionaria (@ai, @nf) do valor monetario
-      pintfra(sdigitos)
-
-      # processar extenso - valores superiores a 1e24 nao sao tratados
-      sdigitos[/^\d+/].length <= 24 ? enumerico : ''
-    end
-  end
-
-  # Parametrizar moeda inferindo singular a partir do plural
-  #
-  # @param [Hash] moeda as opcoes para parametrizar a moeda/fracao
-  # @option moeda [Symbol] :lc locale do extenso -
-  #  portugues de portugal (:pt) ou brasil (:br)
-  # @option moeda [String] :msingular moeda no singular -
-  #  inferido do plural menos "S"
-  # @option moeda [String] :fsingular fracao no singular -
-  #  inferido do plural menos "S"
-  # @option moeda [String] :mplural moeda no plural
-  # @option moeda [String] :fplural fracao no plural
-  # @return [void]
-  def self.psingular(moeda)
-    @ms = moeda[:msingular] ||
-          (moeda[:mplural].to_s[-1] == 'S' ? moeda[:mplural][0..-2] : 'EURO')
-    @cs = moeda[:fsingular] ||
-          (moeda[:fplural].to_s[-1] == 'S' ? moeda[:fplural][0..-2] : 'CÊNTIMO')
-  end
-
-  # Parametrizar moeda inferindo plural a partir do singular
-  #
-  # @param [Hash] moeda as opcoes para parametrizar a moeda/fracao
-  # @option moeda [Symbol] :lc locale do extenso -
-  #  portugues de portugal (:pt) ou brasil (:br)
-  # @option moeda [String] :msingular moeda no singular
-  # @option moeda [String] :fsingular fracao no singular
-  # @option moeda [String] :mplural moeda no plural -
-  #  inferido do singular mais "S"
-  # @option moeda [String] :fplural fracao no plural -
-  #  inferido do singular mais "S"
-  # @return [void]
-  def self.pplural(moeda)
-    # somente [:pt, :br]
-    @lc = LC.include?(moeda[:lc]) ? moeda[:lc] : :pt
-
-    @mp = moeda[:mplural] || @ms + 'S'
-    @cp = moeda[:fplural] || @cs + 'S'
-  end
-
-  # Produz extenso(s) de objeto(s) em portugues de portugal ou brasil.
+  # Produz extenso(s)) em portugues de portugal ou brasil
   #
   # @param [Hash] moeda as opcoes para parametrizar a moeda/fracao
   # @option moeda [Symbol] :lc locale do extenso -
@@ -250,10 +18,10 @@ module ExtensoPt
   # @option moeda [String] :fsingular fracao no singular
   # @option moeda [String] :mplural moeda no plural
   # @option moeda [String] :fplural fracao no plural
-  # @return [String, Array<extensos>, Hash<extensos>] string extenso
+  # @return [String, Array, Hash] string extenso
   #  se objecto for (String, Float, Integer),
-  #  array se objecto for (Array, Range),
-  #  hash se objecto for (Hash)
+  #  array<extensos> se objecto for (Array, Range),
+  #  hash<extensos> se objecto for (Hash)
   def extenso(moeda = { lc: :pt, msingular: 'EURO', fsingular: 'CÊNTIMO' })
     # parametrizacao por defeito para :br
     if moeda[:lc] == :br && !moeda[:msingular] && !moeda[:mplural]
@@ -264,8 +32,8 @@ module ExtensoPt
     ExtensoPt.psingular(moeda)
     ExtensoPt.pplural(moeda)
 
-    # extenso do objeto
-    ExtensoPt.eobjeto(self)
+    # cria extenso(s) em portugues de portugal ou brasil
+    ExtensoPt.o2e(self)
   end
 end
 
@@ -284,17 +52,68 @@ class Range
   include ExtensoPt
 end
 
-# permite obter o extenso dum Float
+# permite obter o extenso de Float
 class Float
   include ExtensoPt
 end
 
-# permite obter o extenso dum Integer
+# permite obter o extenso ou numeral romano de Integer
 class Integer
   include ExtensoPt
+
+  # Produz numeracao romana a partir do inteiro
+  #
+  # @return [String] numeracao romana
+  def romana
+    return "-#{i2r(-self)}" if negative?
+
+    i2r(self)
+  end
+
+  # Recursivamente produz numeral romano
+  #
+  # @param [Integer] numero a converter em numeral romano
+  # @return [String] numeral romano
+  def i2r(numero)
+    return '' if numero.zero?
+
+    ROMAN.each { |r, v| return r.to_s + i2r(numero - v) if v <= numero }
+  end
 end
 
-# permite obter o extenso duma String de digitos
+# permite obter o extenso duma string de digitos ou
+#  inteiro duma string numeral romano
 class String
   include ExtensoPt
+
+  # Testa se string contem numeracao romana
+  #
+  # @return [true, false] sim ou nao numeracao romana
+  def romana?
+    RO_RE.match?(upcase)
+  end
+
+  # Produz inteiro a partir da numeracao romana
+  #  ou numeracao romana a partir de string digitos
+  #
+  # @return [Integer, String] inteiro ou numeracao romana
+  def romana
+    return -self[/[^-]+/].romana if /-+/.match?(self)
+    return self[/^\d+/].to_i.romana if /^\d+/.match?(self)
+    return 0 unless romana?
+
+    r2i(upcase, 0)
+  end
+
+  # Recursivamente produz inteiro
+  #
+  # @param [String] numeral romano em convercao
+  # @param [Integer] ultimo numeral convertido
+  # @return [Integer] inteiro do numeral romano
+  def r2i(numeral, ultimo)
+    return 0 if numeral.empty?
+
+    v = ROMAN[numeral[-1].to_sym]
+    v < ultimo ? (r2i(numeral.chop, v) - v) : (r2i(numeral.chop, v) + v)
+  end
 end
