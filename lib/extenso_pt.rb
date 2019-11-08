@@ -3,7 +3,8 @@
 require 'bigdecimal/util'
 require 'extenso_pt/version'
 require 'extenso_pt/constantes'
-require 'extenso_pt/module'
+require 'extenso_pt/extenso'
+require 'extenso_pt/romana'
 
 # @author Hernani Rodrigues Vaz
 module ExtensoPt
@@ -29,91 +30,60 @@ module ExtensoPt
     end
 
     # parametrizar moeda
-    ExtensoPt.psingular(moeda)
-    ExtensoPt.pplural(moeda)
+    ExtensoPt.epsi(moeda)
+    ExtensoPt.eppl(moeda)
 
     # cria extenso(s) em portugues de portugal ou brasil
-    ExtensoPt.o2e(self)
+    ExtensoPt.eo2e(self)
   end
-end
-
-# permite obter um Hash com valores numericos convertidos nos seus extensos
-class Hash
-  include ExtensoPt
-end
-
-# permite obter um Array com valores numericos convertidos nos seus extensos
-class Array
-  include ExtensoPt
-end
-
-# permite obter um Array com valores numericos convertidos nos seus extensos
-class Range
-  include ExtensoPt
-end
-
-# permite obter o extenso de Float
-class Float
-  include ExtensoPt
-end
-
-# permite obter o extenso ou numeral romano de Integer
-class Integer
-  include ExtensoPt
-
-  # Produz numeracao romana a partir do inteiro
-  #
-  # @return [String] numeracao romana
-  def romana
-    return "-#{i2r(-self)}" if negative?
-
-    i2r(self)
-  end
-
-  # Recursivamente produz numeral romano
-  #
-  # @param [Integer] numero a converter em numeral romano
-  # @return [String] numeral romano
-  def i2r(numero)
-    return '' if numero.zero?
-
-    ROMAN.each { |r, v| return r.to_s + i2r(numero - v) if v <= numero }
-  end
-end
-
-# permite obter o extenso duma string de digitos ou
-#  inteiro duma string numeral romano
-class String
-  include ExtensoPt
 
   # Testa se string contem numeracao romana
   #
   # @return [true, false] sim ou nao numeracao romana
   def romana?
-    RO_RE.match?(upcase)
+    is_a?(String) ? RO_RE.match?(upcase) : false
   end
 
-  # Produz inteiro a partir da numeracao romana
-  #  ou numeracao romana a partir de string digitos
+  # Produz numeracao romana a partir de numerico
+  # ou numerico a partir da numeracao romana
+  # (numerico pode ser uma string digitos)
   #
-  # @return [Integer, String] inteiro ou numeracao romana
+  # @return [String, Integer] numeracao romana ou inteiro
   def romana
-    return -self[/[^-]+/].romana if /-+/.match?(self)
-    return self[/^\d+/].to_i.romana if /^\d+/.match?(self)
-    return 0 unless romana?
-
-    r2i(upcase, 0)
+    # converte os valores do Hash
+    if is_a?(Hash) then map { |k, v| [k, v.romana] }.to_h
+    # converte objecto num Array com os valores convertidos
+    elsif respond_to?(:to_a) then to_a.map(&:romana)
+    # numeracao romana a partir de inteiro ou string digitos
+    elsif (inteiro = to_i).positive? then ExtensoPt.ri2r(inteiro)
+    else
+      # inteiro a partir da numeracao romana
+      RO_RE.match?(to_s) ? ExtensoPt.rr2i(upcase, 0) : ''
+    end
   end
+end
 
-  # Recursivamente produz inteiro
-  #
-  # @param [String] numeral romano em convercao
-  # @param [Integer] ultimo numeral convertido
-  # @return [Integer] inteiro do numeral romano
-  def r2i(numeral, ultimo)
-    return 0 if numeral.empty?
+# permite obter um Hash com valores convertidos
+class Hash
+  include ExtensoPt
+end
 
-    v = ROMAN[numeral[-1].to_sym]
-    v < ultimo ? (r2i(numeral.chop, v) - v) : (r2i(numeral.chop, v) + v)
-  end
+# permite obter um Array com valores convertidos
+class Array
+  include ExtensoPt
+end
+
+# permite obter um Array com valores do Range convertidos
+class Range
+  include ExtensoPt
+end
+
+# permite obter Float ou Integer convertidos
+class Numeric
+  include ExtensoPt
+end
+
+# permite obter strings convertidas
+class String
+  include ExtensoPt
 end

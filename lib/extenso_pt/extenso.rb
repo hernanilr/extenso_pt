@@ -15,7 +15,7 @@ module ExtensoPt
   #
   # @param [Integer] cem o valor dum grupo 3 digitos a converter
   # @return [String] o extenso das dezenas
-  def self.e90(cem)
+  def self.e090(cem)
     A0100[@lc][cem / 10] +
       (cem > 20 && (cem % 10).positive? ? ' E ' : '') # proposicao
   end
@@ -24,7 +24,7 @@ module ExtensoPt
   #
   # @param [Integer] cem o valor dum grupo 3 digitos a converter
   # @return [String] o extenso das unidades
-  def self.e9(cem)
+  def self.e009(cem)
     A0020[@lc][cem < 20 ? cem : cem % 10]
   end
 
@@ -37,7 +37,7 @@ module ExtensoPt
     @cp ||= @ms + 'S'
 
     if @nf.positive?
-      e90(@nf) + e9(@nf) + (@nf > 1 ? ' ' + @cp : ' ' + @cs)
+      e090(@nf) + e009(@nf) + (@nf > 1 ? ' ' + @cp : ' ' + @cs)
     else
       ''
     end
@@ -64,7 +64,7 @@ module ExtensoPt
   #
   # @param [Integer] pos posicao actual nos grupos 3 digitos do valor monetario
   # @return [String] separador entre grupos 3 digitos
-  def self.esep(pos)
+  def self.edgs(pos)
     if pos.positive? && @ai[pos - 1].positive?
       @ai[pos - 1] > 100 ? ' ' : ' E '
     else
@@ -76,7 +76,7 @@ module ExtensoPt
   #
   # @param [Integer] pos posicao actual nos grupos 3 digitos do valor monetario
   # @return [String] qualificador grupo de 3 digitos
-  def self.e1e24(pos)
+  def self.e124(pos)
     if @ai[pos].positive?
       @ai[pos] > 1 ? P1E24[@lc][pos] : S1E24[@lc][pos]
     else
@@ -98,16 +98,16 @@ module ExtensoPt
             # caso especial MIL EUROS
             ''
           else
-            e900(@ai[pos]) + e90(@ai[pos] % 100) + e9(@ai[pos] % 100)
+            e900(@ai[pos]) + e090(@ai[pos] % 100) + e009(@ai[pos] % 100)
           end
     # qualificador grupo de 3 digitos
-    dg3 + e1e24(pos)
+    dg3 + e124(pos)
   end
 
   # Parametrizar controle singular/plural & proposicoes
   #
   # @return [void]
-  def self.pcontrolo
+  def self.epsp
     # soma grupos 1,2 (primeiros 6 digitos)
     @s6 = @ai[0].to_i + @ai[1].to_i * 2
     # soma grupos 3.. (digitos acima de 6)
@@ -121,17 +121,17 @@ module ExtensoPt
   # @param [Integer] pos posicao actual nos grupos 3 digitos do valor monetario
   # @param [String] ext extenso em construcao
   # @return [String] o extenso dum valor monetario
-  def self.emonetario(pos, ext)
+  def self.etot(pos, ext)
     # testa fim do valor monetario
     if pos >= @ai.count
       # parametrizar controle singular/plural & proposicoes
-      pcontrolo
+      epsp
 
       # caso especial zero
       (@tt + @nf).zero? ? 'ZERO ' + @mp : ext + efim
     else
       # tratamento do proximo grupo 3 digitos
-      emonetario(pos + 1, edg3(pos) + esep(pos) + ext)
+      etot(pos + 1, edg3(pos) + edgs(pos) + ext)
     end
   end
 
@@ -139,7 +139,7 @@ module ExtensoPt
   #
   # @param [String] digitos do valor monetario
   # @return [void]
-  def self.pintfra(dig)
+  def self.epif(dig)
     # parte inteira do valor monetario => array grupos 3 digitos
     #  ex: 123022.12 => [22, 123]
     @ai = dig[/^\d+/].to_s.reverse.scan(/\d{1,3}/).map { |i| i.reverse.to_i }
@@ -158,23 +158,19 @@ module ExtensoPt
   #  se objecto for (String, Float, Integer),
   #  array<extensos> se objecto for (Array, Range),
   #  hash<extensos> se objecto for (Hash)
-  def self.o2e(obj)
-    if obj.is_a?(Hash)
-      # converte os valores do Hash nos seus extensos - devolve um Hash
-      obj.map { |k, v| [k, o2e(v)] }.to_h
-    elsif obj.respond_to?(:to_a)
-      # converte o objecto num Array com os extensos dos valores
-      obj.to_a.map { |a| o2e(a) }
+  def self.eo2e(obj)
+    # converte os valores do Hash nos seus extensos - devolve um Hash
+    if obj.is_a?(Hash) then obj.map { |k, v| [k, eo2e(v)] }.to_h
+    # converte o objecto num Array com os extensos dos valores
+    elsif obj.respond_to?(:to_a) then obj.to_a.map { |a| eo2e(a) }
     else
       # converte objeto em string digitos utilizando bigdecimal para
       #  evitar problemas com aritmetica virgula flutuante em valores >1e12
-      digitos = obj.to_d.to_s('F')
-
       # parametrizar parte inteira/fracionaria (@ai, @nf) do valor monetario
-      pintfra(digitos)
+      epif(obj.to_d.to_s('F'))
 
-      # processar extenso - valores superiores a 1e24 nao sao tratados
-      digitos[/^\d+/].length <= 24 ? emonetario(0, '') : ''
+      # processar extenso - valores >1e24 nao sao tratados
+      @ai.count > 8 ? '' : etot(0, '')
     end
   end
 
@@ -190,7 +186,7 @@ module ExtensoPt
   # @option moeda [String] :mplural moeda no plural
   # @option moeda [String] :fplural fracao no plural
   # @return [void]
-  def self.psingular(moeda)
+  def self.epsi(moeda)
     @ms = moeda[:msingular] ||
           (moeda[:mplural].to_s[-1] == 'S' ? moeda[:mplural][0..-2] : 'EURO')
     @cs = moeda[:fsingular] ||
@@ -209,7 +205,7 @@ module ExtensoPt
   # @option moeda [String] :fplural fracao no plural -
   #  inferido do singular mais "S"
   # @return [void]
-  def self.pplural(moeda)
+  def self.eppl(moeda)
     # somente [:pt, :br]
     @lc = EXTLC.include?(moeda[:lc]) ? moeda[:lc] : :pt
 
