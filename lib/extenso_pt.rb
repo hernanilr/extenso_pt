@@ -10,11 +10,12 @@ require 'extenso_pt/romana'
 module ExtensoPt
   class Error < StandardError; end
 
-  # Produz extenso(s)) em portugues de portugal ou brasil
+  # Produz extenso em portugues de portugal ou brasil
+  # (valor numerico pode ser uma string digitos)
   #
-  # @param [Hash] moeda as opcoes para parametrizar a moeda/fracao
+  # @param [Hash] moeda as opcoes para parametrizar moeda/fracao
   # @option moeda [Symbol] :lc locale do extenso -
-  #  portugues de portugal (:pt) ou brasil (:br)
+  #  portugues de portugal (:pt) portugues do brasil (:br)
   # @option moeda [String] :msingular moeda no singular
   # @option moeda [String] :fsingular fracao no singular
   # @option moeda [String] :mplural moeda no plural
@@ -33,32 +34,32 @@ module ExtensoPt
     ExtensoPt.epsi(moeda)
     ExtensoPt.eppl(moeda)
 
-    # cria extenso(s) em portugues de portugal ou brasil
+    # cria extenso em portugues de portugal ou brasil
     ExtensoPt.eo2e(self)
   end
 
-  # Testa se string contem numeracao romana
+  # Testa se contem numeracao romana
   #
   # @return [true, false] sim ou nao numeracao romana
   def romana?
     is_a?(String) ? RO_RE.match?(upcase) : false
   end
 
-  # Produz numeracao romana a partir de numerico
-  # ou numerico a partir da numeracao romana
-  # (numerico pode ser uma string digitos)
+  # Produz numeracao romana a partir de valor numerico
+  # ou valor numerico a partir da numeracao romana
+  # (valor numerico pode ser uma string digitos)
   #
-  # @return [String, Integer] numeracao romana ou inteiro
+  # @return [String, Integer] numeracao romana ou valor numerico
   def romana
     # converte os valores do Hash
     if is_a?(Hash) then map { |k, v| [k, v.romana] }.to_h
     # converte objecto num Array com os valores convertidos
     elsif respond_to?(:to_a) then to_a.map(&:romana)
     # numeracao romana a partir de inteiro ou string digitos
-    elsif (inteiro = to_i).positive? then ExtensoPt.ri2r(inteiro)
-    else
-      # inteiro a partir da numeracao romana
-      RO_RE.match?(to_s) ? ExtensoPt.rr2i(upcase, 0) : ''
+    # (ignora parte fracionaria)
+    elsif (inteiro = to_i) != 0 then ExtensoPt.ri2r(inteiro)
+    # inteiro a partir da numeracao romana
+    else RO_RE.match?(to_s) ? ExtensoPt.rr2i(upcase, 0) : ''
     end
   end
 end

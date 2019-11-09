@@ -2,20 +2,22 @@
 
 # @author Hernani Rodrigues Vaz
 module ExtensoPt
-  # Recursivamente produz numeral romano
+  # Produz numeral romano a partir de inteiro
   #
-  # @param [Integer] numero a converter em numeral romano
+  # @param [Integer] inteiro a converter
   # @return [String] numeral romano
-  def self.ri2r(numero)
-    return '' if numero <= 0
+  def self.ri2r(inteiro)
+    return '' if inteiro.zero?
 
-    ROMAN.each { |r, v| return r.to_s + ri2r(numero - v) if v <= numero }
+    # numeracao romana nao tem negativos
+    inteiro = inteiro.abs if inteiro.negative?
+    ROMAN.each { |r, v| return r.to_s + ri2r(inteiro - v) if v <= inteiro }
   end
 
-  # Recursivamente produz inteiro
+  # Produz inteiro a partir de numeral romano
   #
-  # @param [String] numeral romano em convercao
-  # @param [Integer] ultimo numeral convertido
+  # @param [String] numeral romano a converter
+  # @param [Integer] ultimo valor convertido
   # @return [Integer] inteiro do numeral romano
   def self.rr2i(numeral, ultimo)
     return 0 if numeral.empty?

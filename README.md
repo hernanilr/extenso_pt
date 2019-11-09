@@ -1,6 +1,6 @@
 # ExtensoPt [![Build Status](https://travis-ci.org/hernanilr/extenso_pt.svg?branch=master)](https://travis-ci.org/hernanilr/extenso_pt)
 
-Converte valores monetários em extenso de portugês de portugal, brasil ou numeracao romana. Os valores podem ser um numerico, uma string de digitos ou um conjunto destes (array, range, hash). O extenso pode ser produzido na escala longa (utilizada em todos os países lusófonos) ou na escala curta (utilizada no Brasil) [wiki](https://pt.wikipedia.org/wiki/Escalas_curta_e_longa). Pode ainda converter os valores em numeracao romana e vice versa.
+Produz extenso em portugês de portugal, brasil ou numeracao romana. Os valores podem ser um numerico, uma string de digitos ou um conjunto destes agrupados em (array, range, hash). O extenso pode ser produzido na escala longa (utilizada em todos os países lusófonos) ou na escala curta (utilizada no Brasil) [wiki](https://pt.wikipedia.org/wiki/Escalas_curta_e_longa). Pode ainda produzir numeracao romana e vice versa.
 
 ## Installation
 
@@ -26,19 +26,19 @@ Or install it yourself as:
 "MCCXXXIV".romana                                  => 1234
 12000000.12.extenso                                => "DOZE MILHÕES DE EUROS E DOZE CÊNTIMOS"
 1.01.extenso(msingular:"DÓLAR")                    => "UM DÓLAR E UM CÊNTIMO"         
-10.1.extenso(mplural:"DÓLARES")                    => "DEZ DÓLARES E DEZ CÊNTIMOS"      # plural inferido <silgular> mais "S"
 14.01.extenso(mplural:"REAIS",fsingular:"CENTAVO") => "CATORZE REAIS E UM CENTAVO"
-14.10.extenso(mplural:"REAIS",fsingular:"CENTAVO") => "CATORZE REAIS E DEZ CENTAVOS"
 14.1.extenso(lc: :br)                              => "QUATORZE REAIS E DEZ CENTAVOS"
-1e10.extenso(lc: :pt,mplural:"REAIS")              => "DEZ MIL MILHÕES DE REAIS"        # portugal usa escala longa
+14.01.extenso(mplural:"REAIS",fplural:"CENTAVOS")  => "CATORZE REAIS E UM CENTAVO"      # singular inferido = <plural> menos "S"
+10.1.extenso(mplural:"DÓLARES")                    => "DEZ DÓLARES E DEZ CÊNTIMOS"      # plural   inferido = <silgular> mais "S"
+1e10.extenso(lc: :pt)                              => "DEZ MIL MILHÕES DE EUROS"        # portugal usa escala longa
 1e10.extenso(lc: :br)                              => "DEZ BILHÕES DE REAIS"            # brasil usa escala curta
-14.01.extenso(mplural:"REAIS",fplural:"CENTAVOS")  => "CATORZE REAIS E UM CENTAVO"      # singular inferido <plural> menos "S"
-["1", "2"].extenso                                 => ["UM EURO","DOIS EUROS"]          # extenso Array
-[0.1, 0.2].extenso                                 => ["DEZ CÊNTIMOS","VINTE CÊNTIMOS"] # extenso Array
-(1..2).extenso                                     => ["UM EURO","DOIS EUROS"]          # extenso Range
-{:a => 1,:b => 2}.extenso                          => {:a=>"UM EURO",:b=>"DOIS EUROS"}  # extenso Hash
-{:a => [3, 4],:b => 2}.extenso                     => {:a=>["TRÊS EUROS", "QUATRO EUROS"],:b=>"DOIS EUROS"} 
-
+[0.1, 0.2].extenso                                 => ["DEZ CÊNTIMOS","VINTE CÊNTIMOS"]
+[4, 5, 6, 7].romana                                => ["IV", "V", "VI", "VII"]
+(1..2).extenso                                     => ["UM EURO","DOIS EUROS"]
+(7..9).romana                                      => ["VII", "VIII", "IX"]
+{:a=>1, :b=>2}.extenso                             => {:a=>"UM EURO",:b=>"DOIS EUROS"}
+{:a=>[3, 4], :b=>2}.extenso                        => {:a=>["TRÊS EUROS", "QUATRO EUROS"],:b=>"DOIS EUROS"} 
+{:a=>["MCMLXVIII", "XIV"], :b=>4}.romana           => {:a=>[1968, 14], :b=>"IV"}
 ```
 
 ## Development
