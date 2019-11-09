@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.summary = 'Produz extenso em portugês de portugal, brasil '\
     'ou numeracao romana.'
   spec.description = spec.summary
-  spec.description += 'Os valores podem ser um numerico, uma string de '\
+  spec.description += ' Os valores podem ser um numerico, uma string de '\
     'digitos ou um conjunto destes agrupados em (array, range, hash). '\
     'O extenso pode ser produzido na escala longa (utilizada em todos os '\
     'países lusófonos) ou na escala curta (utilizada no Brasil). Pode ainda '\
