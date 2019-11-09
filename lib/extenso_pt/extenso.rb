@@ -34,7 +34,7 @@ module ExtensoPt
   def self.ef99
     # parametrizacao por defeito
     @cs ||= 'CÊNTIMO'
-    @cp ||= @ms + 'S'
+    @cp ||= @cs + 'S'
 
     if @nf.positive?
       e090(@nf) + e009(@nf) + (@nf > 1 ? ' ' + @cp : ' ' + @cs)
