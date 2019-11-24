@@ -56,9 +56,16 @@ module ExtensoPt
   # Controla proposicao DE
   #
   # @return [true, false] sim ou nao proposicao DE
-  def self.cpde?
+  def self.cde?
     @ai[0..1].to_a.inject(:+).to_i.zero? &&
       @ai[2..-1].to_a.inject(:+).to_i.positive?
   end
-  # private_class_method :c124, :cpde?
+
+  # Controla proposicao E
+  #
+  # @return [true, false] sim ou nao proposicao E
+  def self.cnf?
+    @nf.positive?
+  end
+  # private_class_method :c124, :cde?, :cnf?
 end

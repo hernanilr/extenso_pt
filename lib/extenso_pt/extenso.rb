@@ -8,7 +8,7 @@ module ExtensoPt
   # @return [String] extenso das centenas
   def self.e900(mil)
     A1000[@lc][(mil > 100 ? 1 : 0) + mil / 100] +
-      (mil > 100 && (mil % 100).positive? ? ' E ' : '') # proposicao
+      (mil > 100 && (mil % 100).positive? ? ' E ' : '')
   end
 
   # Produz extenso das dezenas em portugues de portugal ou brasil
@@ -17,7 +17,7 @@ module ExtensoPt
   # @return [String] extenso das dezenas
   def self.e090(cem)
     A0100[@lc][cem / 10] +
-      (cem > 20 && (cem % 10).positive? ? ' E ' : '') # proposicao
+      (cem > 20 && (cem % 10).positive? ? ' E ' : '')
   end
 
   # Produz extenso das unidades em portugues de portugal ou brasil
@@ -32,8 +32,8 @@ module ExtensoPt
   #
   # @return [String] extenso da parte fracionaria
   def self.ef99
-    if @nf.positive?
-      e090(@nf) + e009(@nf) + (@nf > 1 ? ' ' + @fp : ' ' + @fs)
+    if cnf?
+      e090(@nf) + e009(@nf) + ' ' + (@nf > 1 ? @fp : @fs)
     else
       ''
     end
@@ -43,13 +43,12 @@ module ExtensoPt
   #
   # @return [String] final da moeda
   def self.efim
-    if c124.positive?
+    t = c124
+    if t.positive?
       # proposicao DE entre parte inteira e moeda
       # moeda singular/plural
       # proposicao E entre moeda e parte fracionaria
-      (cpde? ? ' DE ' : ' ') +
-        (c124 > 1 ? @mp : @ms) +
-        (@nf.positive? ? ' E ' : '')
+      (cde? ? ' DE ' : ' ') + (t > 1 ? @mp : @ms) + (cnf? ? ' E ' : '')
     else
       ''
     end + ef99
@@ -92,7 +91,7 @@ module ExtensoPt
     end + e124(pos)
   end
 
-  # Produz extenso da parte inteira (@ai) e fracionaria (@nf)
+  # Produz extenso da parte inteira e fracionaria
   #
   # @param [Integer] pos posicao no grupo 3 digitos
   # @param [String] ext extenso em construcao

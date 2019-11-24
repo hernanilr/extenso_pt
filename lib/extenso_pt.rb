@@ -114,5 +114,5 @@ class Array; include ExtensoPt; end
 class Range; include ExtensoPt; end
 # converter Float, Integer
 class Numeric; include ExtensoPt; end
-# converter Strings
+# converter String digitos
 class String; include ExtensoPt; end
