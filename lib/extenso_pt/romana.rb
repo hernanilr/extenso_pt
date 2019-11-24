@@ -5,7 +5,7 @@ module ExtensoPt
   # Produz numeral romano a partir de inteiro
   #
   # @param [Integer] inteiro a converter
-  # @return [String] numeral romano
+  # @return [String] numeral romano do inteiro
   def self.ri2r(inteiro)
     return '' if inteiro.zero?
 

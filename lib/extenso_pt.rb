@@ -1,41 +1,83 @@
 # frozen_string_literal: true
 
 require 'bigdecimal/util'
-require 'extenso_pt/version'
 require 'extenso_pt/constantes'
+require 'extenso_pt/variaveis'
 require 'extenso_pt/extenso'
 require 'extenso_pt/romana'
+require 'extenso_pt/version'
 
 # @author Hernani Rodrigues Vaz
 module ExtensoPt
   class Error < StandardError; end
-
   # Produz extenso em portugues de portugal ou brasil
   # (valor numerico pode ser uma string digitos)
   #
   # @param [Hash] moeda as opcoes para parametrizar moeda/fracao
   # @option moeda [Symbol] :lc locale do extenso -
   #  portugues de portugal (:pt) portugues do brasil (:br)
-  # @option moeda [String] :msingular moeda no singular
-  # @option moeda [String] :fsingular fracao no singular
-  # @option moeda [String] :mplural moeda no plural
-  # @option moeda [String] :fplural fracao no plural
-  # @return [String, Array, Hash] string extenso
-  #  se objecto for (String, Float, Integer),
+  # @option moeda [String] :moeda_singular moeda no singular
+  # @option moeda [String] :fracao_singular fracao no singular
+  # @option moeda [String] :moeda_plural moeda no plural
+  # @option moeda [String] :fracao_plural fracao no plural
+  # @return [String, Array, Hash]
+  #  string<extenso> se objecto for (String, Float, Integer),
   #  array<extensos> se objecto for (Array, Range),
-  #  hash<extensos> se objecto for (Hash)
-  def extenso(moeda = { lc: :pt, msingular: 'EURO', fsingular: 'CÊNTIMO' })
-    # parametrizacao por defeito para :br
-    if moeda[:lc] == :br && !moeda[:msingular] && !moeda[:mplural]
-      moeda.merge!(msingular: 'REAL', mplural: 'REAIS', fsingular: 'CENTAVO')
-    end
-
+  #  hash<extensos>  se objecto for (Hash)
+  def extenso(moeda = { lc: :pt })
     # parametrizar moeda
-    ExtensoPt.epsi(moeda)
-    ExtensoPt.eppl(moeda)
+    ExtensoPt.epmo(moeda.parametrizar)
 
-    # cria extenso em portugues de portugal ou brasil
-    ExtensoPt.eo2e(self)
+    processa
+  end
+
+  # Processa objeto criando extenso(s) em portugues de portugal ou brasil
+  #
+  # @return [String, Array, Hash]
+  #  string<extenso> se objecto for (String, Float, Integer),
+  #  array<extensos> se objecto for (Array, Range),
+  #  hash<extensos>  se objecto for (Hash)
+  def processa
+    # converte valores do Hash nos seus extensos
+    if is_a?(Hash) then map { |k, v| [k, v.processa] }.to_h
+    # converte objecto num Array com os valores convertidos nos seus extensos
+    elsif respond_to?(:to_a) then to_a.map(&:processa)
+    else
+      # converte objeto em string digitos utilizando bigdecimal para
+      #  evitar problemas com aritmetica virgula flutuante em valores >1e12
+      # parametrizar parte inteira/fracionaria (@ai, @nf) da string digitos
+      ExtensoPt.epif(to_d.to_s('F'))
+
+      # processar extenso - valores >1e24 sao ignorados
+      ExtensoPt.ivai.count > 8 ? '' : ExtensoPt.ejun(0, '')
+    end
+  end
+
+  # Parametrizacao por defeito para :br
+  #
+  # @return [Hash] parametrizacao moeda
+  def parametrizar
+    if value?(:br) &&
+       %i[moeda_singular moeda_plural].all? { |e| !keys.include?(e) }
+      { lc: :br, moeda_singular: 'REAL', moeda_plural: 'REAIS',
+        fracao_singular: 'CENTAVO', fracao_plural: 'CENTAVOS' }
+    else
+      inferir_singular
+    end
+  end
+
+  # Parametrizacao singular inferindo do plural
+  #
+  # @return [Hash] parametrizacao moeda
+  def inferir_singular
+    self[:moeda_singular] ||= if fetch(:moeda_plural, '')[-1] == 'S'
+                                fetch(:moeda_plural, '')[0..-2]
+                              end
+    self[:fracao_singular] ||= if fetch(:fracao_plural, '')[-1] == 'S'
+                                 fetch(:fracao_plural, '')[0..-2]
+                               end
+    # eliminar parametros errados
+    keep_if { |k, v| MOEDA.include?(k) && (k != :lc || EXTLC.include?(v)) }
   end
 
   # Testa se contem numeracao romana
@@ -64,27 +106,13 @@ module ExtensoPt
   end
 end
 
-# permite obter um Hash com valores convertidos
-class Hash
-  include ExtensoPt
-end
-
-# permite obter um Array com valores convertidos
-class Array
-  include ExtensoPt
-end
-
-# permite obter um Array com valores do Range convertidos
-class Range
-  include ExtensoPt
-end
-
-# permite obter Float ou Integer convertidos
-class Numeric
-  include ExtensoPt
-end
-
-# permite obter strings convertidas
-class String
-  include ExtensoPt
-end
+# converter Hash
+class Hash; include ExtensoPt; end
+# converter Array
+class Array; include ExtensoPt; end
+# converter Range
+class Range; include ExtensoPt; end
+# converter Float, Integer
+class Numeric; include ExtensoPt; end
+# converter Strings
+class String; include ExtensoPt; end

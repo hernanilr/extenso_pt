@@ -1,4 +1,6 @@
 {
   "lib/*.rb": {"alternate": "test/{}_test.rb"},
-  "test/*_test.rb": {"alternate": "lib/{}.rb"}
+  "test/*_test.rb": {"alternate": "lib/{}.rb"},
+  "lib/extenso_pt/*.rb": {"alternate": "test/{}_test.rb"},
+  "test/*_test.rb": {"alternate": "lib/extenso_pt/{}.rb"}
 }

@@ -2,7 +2,11 @@
 
 # @author Hernani Rodrigues Vaz
 module ExtensoPt
-  # portugues de portugal ou brasil
+  # chaves parametrizacao moeda permitidas
+  MOEDA = %i[moeda_singular fracao_singular
+             moeda_plural fracao_plural lc].freeze
+  # somente portugues de portugal ou brasil permitidos
+  # qualquer outro locale equivale usar :pt
   EXTLC = %i[pt br].freeze
   # extensos 1 ate 19
   A0020 = {
