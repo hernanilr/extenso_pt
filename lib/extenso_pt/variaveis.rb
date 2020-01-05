@@ -4,15 +4,14 @@
 module ExtensoPt
   # Parametrizar moeda
   #
-  # @param [Hash] moeda as opcoes para parametrizar moeda/fracao
+  # @param [Hash<String, Symbol>] moeda opcoes parametrizar moeda/fracao
   # @option moeda [Symbol] :lc locale do extenso -
   #  portugues de portugal (:pt) portugues do brasil (:br)
   # @option moeda [String] :moeda_singular moeda no singular
   # @option moeda [String] :fracao_singular fracao no singular
   # @option moeda [String] :moeda_plural moeda no plural
   # @option moeda [String] :fracao_plural fracao no plural
-  # @return [void]
-  def self.epmo(moeda)
+  def self.prmo(moeda)
     # parametrizacao por defeito
     #  the first mention of a @<variable> creates that instance variable
     #  in the current object ie: self = ExtensoPt
@@ -26,8 +25,7 @@ module ExtensoPt
   # Parametrizar parte inteira e fracionaria
   #
   # @param [String] digitos do valor monetario a converter
-  # @return [void]
-  def self.epif(digitos)
+  def self.prif(digitos)
     # cria array de grupos 3 digitos da parte inteira
     #  ex: 123022.12 => [22, 123]
     @ai = digitos[/^\d+/].to_s.reverse.scan(/\d{1,3}/)
@@ -39,31 +37,23 @@ module ExtensoPt
     @nf = (digitos[/\.\d*/].to_f * 100).round
   end
 
-  # Array grupos 3 digitos da parte inteira
-  #
-  # @return array[Integer] attr_reader
-  def self.ivai
+  # @return [Array<Integer>] grupos 3 digitos da parte inteira
+  def self.cvai
     @ai
   end
 
-  # Soma grupos 1-8 de digitos
-  #
-  # @return [Integer] soma digitos
+  # @return [Integer] soma grupos 1-8 de digitos
   def self.c124
     @ai[0].to_i + @ai[1].to_i * 2 + @ai[2..-1].to_a.inject(:+).to_i * 2
   end
 
-  # Controla proposicao DE
-  #
-  # @return [true, false] sim ou nao proposicao DE
+  # @return [true, false] sim ou nao para controle proposicao DE
   def self.cde?
     @ai[0..1].to_a.inject(:+).to_i.zero? &&
       @ai[2..-1].to_a.inject(:+).to_i.positive?
   end
 
-  # Controla proposicao E
-  #
-  # @return [true, false] sim ou nao proposicao E
+  # @return [true, false] sim ou nao para controle proposicao E
   def self.cnf?
     @nf.positive?
   end

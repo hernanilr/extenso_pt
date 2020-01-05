@@ -96,7 +96,7 @@ module ExtensoPt
   # @param [Integer] pos posicao no grupo 3 digitos
   # @param [String] ext extenso em construcao
   # @return [String] extenso do valor monetario
-  def self.ejun(pos, ext)
+  def self.ejun(pos = 0, ext = '')
     # testa fim do valor monetario
     if pos >= @ai.count
       # caso especial de zero

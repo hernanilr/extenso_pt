@@ -13,30 +13,30 @@ module ExtensoPt
   # Produz extenso em portugues de portugal ou brasil
   # (valor numerico pode ser uma string digitos)
   #
-  # @param [Hash] moeda as opcoes para parametrizar moeda/fracao
+  # @param [Hash<String, Symbol>] moeda opcoes parametrizar moeda/fracao
   # @option moeda [Symbol] :lc locale do extenso -
   #  portugues de portugal (:pt) portugues do brasil (:br)
   # @option moeda [String] :moeda_singular moeda no singular
   # @option moeda [String] :fracao_singular fracao no singular
   # @option moeda [String] :moeda_plural moeda no plural
   # @option moeda [String] :fracao_plural fracao no plural
-  # @return [String, Array, Hash]
-  #  string<extenso> se objecto for (String, Float, Integer),
-  #  array<extensos> se objecto for (Array, Range),
-  #  hash<extensos>  se objecto for (Hash)
+  # @return [String, Array<String>, Hash<String>]
+  #  String<extenso> se objecto for (String, Float, Integer),
+  #  Array<extensos> se objecto for (Array, Range),
+  #  Hash<extensos>  se objecto for (Hash)
   def extenso(moeda = { lc: :pt })
     # parametrizar moeda
-    ExtensoPt.epmo(moeda.parametrizar)
+    ExtensoPt.prmo(moeda.parametrizar)
 
     processa
   end
 
   # Processa objeto criando extenso(s) em portugues de portugal ou brasil
   #
-  # @return [String, Array, Hash]
-  #  string<extenso> se objecto for (String, Float, Integer),
-  #  array<extensos> se objecto for (Array, Range),
-  #  hash<extensos>  se objecto for (Hash)
+  # @return [String, Array<String>, Hash<String>]
+  #  String<extenso> se objecto for (String, Float, Integer),
+  #  Array<extensos> se objecto for (Array, Range),
+  #  Hash<extensos>  se objecto for (Hash)
   def processa
     # converte valores do Hash nos seus extensos
     if is_a?(Hash) then map { |k, v| [k, v.processa] }.to_h
@@ -46,16 +46,16 @@ module ExtensoPt
       # converte objeto em string digitos utilizando bigdecimal para
       #  evitar problemas com aritmetica virgula flutuante em valores >1e12
       # parametrizar parte inteira/fracionaria (@ai, @nf) da string digitos
-      ExtensoPt.epif(to_d.to_s('F'))
+      ExtensoPt.prif(to_d.to_s('F'))
 
       # processar extenso - valores >1e24 sao ignorados
-      ExtensoPt.ivai.count > 8 ? '' : ExtensoPt.ejun(0, '')
+      ExtensoPt.cvai.count > 8 ? '' : ExtensoPt.ejun
     end
   end
 
   # Parametrizacao por defeito para :br
   #
-  # @return [Hash] parametrizacao moeda
+  # @return [Hash<String, Symbol>] parametrizacao moeda
   def parametrizar
     if value?(:br) &&
        %i[moeda_singular moeda_plural].all? { |e| !keys.include?(e) }
@@ -68,7 +68,7 @@ module ExtensoPt
 
   # Parametrizacao singular inferindo do plural
   #
-  # @return [Hash] parametrizacao moeda
+  # @return [Hash<String, Symbol>] parametrizacao moeda
   def inferir_singular
     self[:moeda_singular] ||= if fetch(:moeda_plural, '')[-1] == 'S'
                                 fetch(:moeda_plural, '')[0..-2]
