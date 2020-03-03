@@ -1,15 +1,15 @@
 PATH
   remote: .
   specs:
-    extenso_pt (0.6.10)
+    extenso_pt (0.6.11)
       bigdecimal (~> 1.4)
 
 GEM
   remote: https://rubygems.org/
   specs:
     bigdecimal (1.4.4)
-    minitest (5.13.0)
-    rake (10.5.0)
+    minitest (5.14.0)
+    rake (13.0.1)
 
 PLATFORMS
   ruby
@@ -18,7 +18,7 @@ DEPENDENCIES
   bundler (~> 1.17)
   extenso_pt!
   minitest (~> 5.0)
-  rake (~> 10.0)
+  rake
 
 BUNDLED WITH
    1.17.2
