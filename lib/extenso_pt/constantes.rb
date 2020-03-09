@@ -8,28 +8,26 @@ module ExtensoPt
   # somente portugues de portugal ou brasil permitidos
   # qualquer outro locale equivale usar :pt
   EXTLC = %i[pt br].freeze
+  E13 = %w[UM DOIS TRÊS QUATRO CINCO SEIS SETE
+           OITO NOVE DEZ ONZE DOZE TREZE].freeze
   # extensos 1 ate 19
   A0020 = {
-    pt: ['', 'UM', 'DOIS', 'TRÊS', 'QUATRO', 'CINCO', 'SEIS', 'SETE',
-         'OITO', 'NOVE', 'DEZ', 'ONZE', 'DOZE', 'TREZE', 'CATORZE',
-         'QUINZE', 'DEZASSEIS', 'DEZASSETE', 'DEZOITO', 'DEZANOVE'],
-    br: ['', 'UM', 'DOIS', 'TRES', 'QUATRO', 'CINCO', 'SEIS', 'SETE',
-         'OITO', 'NOVE', 'DEZ', 'ONZE', 'DOZE', 'TREZE', 'QUATORZE',
-         'QUINZE', 'DEZESSEIS', 'DEZESSETE', 'DEZOITO', 'DEZENOVE']
+    pt: [''] + E13 + %w[CATORZE QUINZE DEZASSEIS DEZASSETE DEZOITO DEZANOVE],
+    br: [''] + E13 + %w[QUATORZE QUINZE DEZESSEIS DEZESSETE DEZOITO DEZENOVE]
   }.freeze
   # extensos 20 ate 90
   A0100 = {
-    pt: ['', '', 'VINTE', 'TRINTA', 'QUARENTA', 'CINQUENTA', 'SESSENTA',
-         'SETENTA', 'OITENTA', 'NOVENTA'],
-    br: ['', '', 'VINTE', 'TRINTA', 'QUARENTA', 'CINQUENTA', 'SESSENTA',
-         'SETENTA', 'OITENTA', 'NOVENTA']
+    pt: ['', ''] +
+        %w[VINTE TRINTA QUARENTA CINQUENTA SESSENTA SETENTA OITENTA NOVENTA],
+    br: ['', ''] +
+        %w[VINTE TRINTA QUARENTA CINQUENTA SESSENTA SETENTA OITENTA NOVENTA]
   }.freeze
   # extensos 100 ate 900
   A1000 = {
-    pt: ['', 'CEM', 'CENTO', 'DUZENTOS', 'TREZENTOS', 'QUATROCENTOS',
-         'QUINHENTOS', 'SEISCENTOS', 'SETECENTOS', 'OITOCENTOS', 'NOVECENTOS'],
-    br: ['', 'CEM', 'CENTO', 'DUZENTOS', 'TREZENTOS', 'QUATROCENTOS',
-         'QUINHENTOS', 'SEISCENTOS', 'SETECENTOS', 'OITOCENTOS', 'NOVECENTOS']
+    pt: [''] + %w[CEM CENTO DUZENTOS TREZENTOS QUATROCENTOS QUINHENTOS
+                  SEISCENTOS SETECENTOS OITOCENTOS NOVECENTOS],
+    br: [''] + %w[CEM CENTO DUZENTOS TREZENTOS QUATROCENTOS QUINHENTOS
+                  SEISCENTOS SETECENTOS OITOCENTOS NOVECENTOS]
   }.freeze
 
   # singular extensos 1e3 ate 1e24
