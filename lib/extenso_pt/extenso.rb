@@ -28,9 +28,7 @@ module ExtensoPt
     A0020[@lc][cem < 20 ? cem : cem % 10]
   end
 
-  # Produz extenso da parte fracionaria em portugues de portugal ou brasil
-  #
-  # @return [String] extenso da parte fracionaria
+  # @return [String] extenso da parte fracionaria em portugues de portugal ou brasil
   def self.ef99
     if cnf?
       e090(@nf) + e009(@nf) + ' ' + (@nf > 1 ? @fp : @fs)
@@ -39,25 +37,21 @@ module ExtensoPt
     end
   end
 
-  # Produz final da moeda em portugues de portugal ou brasil
-  #
-  # @return [String] final da moeda
+  # @return [String] final da moeda em portugues de portugal ou brasil
   def self.efim
     t = c124
     if t.positive?
-      # proposicao DE entre parte inteira e moeda
-      # moeda singular/plural
-      # proposicao E entre moeda e parte fracionaria
+      # proposicao DE entre parte inteira e moeda & moeda singular/plural & proposicao E entre moeda e parte fracionaria
       (cde? ? ' DE ' : ' ') + (t > 1 ? @mp : @ms) + (cnf? ? ' E ' : '')
     else
       ''
     end + ef99
   end
 
-  # Produz separador entre grupos 3 digitos
+  # Produz proposicao E entre grupos 3 digitos
   #
   # @param [Integer] pos posicao actual nos grupos 3 digitos
-  # @return [String] separador entre grupos 3 digitos
+  # @return [String] proposicao E entre grupos 3 digitos
   def self.edgs(pos)
     if pos.positive? && @ai[pos - 1].positive?
       @ai[pos - 1] > 100 ? ' ' : ' E '
@@ -87,6 +81,7 @@ module ExtensoPt
     if pos == 1 && @ai[pos] == 1
       ''
     else
+      # extenso das centenas + extenso das dezenas + extenso das unidades
       e900(@ai[pos]) + e090(@ai[pos] % 100) + e009(@ai[pos] % 100)
     end + e124(pos)
   end
@@ -102,8 +97,7 @@ module ExtensoPt
       # caso especial de zero
       (c124 + @nf).zero? ? 'ZERO ' + @mp : ext + efim
     else
-      # converte grupo 3 digitos na posicao corrente
-      # envoca proxima posicao
+      # converte grupo 3 digitos na posicao corrente & envoca proxima posicao
       ejun(pos + 1, edg3(pos) + ext)
     end
   end

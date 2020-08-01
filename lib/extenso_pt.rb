@@ -10,12 +10,11 @@ require 'extenso_pt/version'
 # @author Hernani Rodrigues Vaz
 module ExtensoPt
   class Error < StandardError; end
-  # Produz extenso em portugues de portugal ou brasil
-  # (valor numerico pode ser uma string digitos)
+  # Produz extenso em portugues de portugal ou brasil a partir de valor numerico
   #
+  # @note valor numerico pode ser uma string digitos
   # @param [Hash<String, Symbol>] moeda opcoes parametrizar moeda/fracao
-  # @option moeda [Symbol] :lc locale do extenso -
-  #  portugues de portugal (:pt) portugues do brasil (:br)
+  # @option moeda [Symbol] :lc locale do extenso - portugues de portugal (:pt) portugues do brasil (:br)
   # @option moeda [String] :moeda_singular moeda no singular
   # @option moeda [String] :fracao_singular fracao no singular
   # @option moeda [String] :moeda_plural moeda no plural
@@ -33,10 +32,7 @@ module ExtensoPt
 
   # Processa objeto criando extenso(s) em portugues de portugal ou brasil
   #
-  # @return [String, Array<String>, Hash<String>]
-  #  String<extenso> se objecto for (String, Float, Integer),
-  #  Array<extensos> se objecto for (Array, Range),
-  #  Hash<extensos>  se objecto for (Hash)
+  # @return (see #extenso)
   def processa
     # converte valores do Hash nos seus extensos
     if is_a?(Hash) then map { |k, v| [k, v.processa] }.to_h
@@ -53,52 +49,40 @@ module ExtensoPt
     end
   end
 
-  # Parametrizacao por defeito para :br
-  #
-  # @return [Hash<String, Symbol>] parametrizacao moeda
+  # @return [Hash<String, Symbol>] parametrizacao moeda por defeito para :br & inferencias & errados
   def parametrizar
-    if value?(:br) &&
-       %i[moeda_singular moeda_plural].all? { |e| !keys.include?(e) }
-      { lc: :br, moeda_singular: 'REAL', moeda_plural: 'REAIS',
-        fracao_singular: 'CENTAVO', fracao_plural: 'CENTAVOS' }
+    if value?(:br) && %i[moeda_singular moeda_plural].all? { |e| !keys.include?(e) }
+      { lc: :br, moeda_singular: 'REAL', moeda_plural: 'REAIS', fracao_singular: 'CENTAVO', fracao_plural: 'CENTAVOS' }
     else
-      inferir_singular
+      inferir_singular.eliminar_errados
     end
   end
 
-  # Parametrizacao singular inferindo do plural
-  #
-  # @return [Hash<String, Symbol>] parametrizacao moeda
+  # @return [Hash<String, Symbol>] parametrizacao moeda singular inferindo do plural
   def inferir_singular
-    self[:moeda_singular] ||= if fetch(:moeda_plural, '')[-1] == 'S'
-                                fetch(:moeda_plural, '')[0..-2]
-                              end
-    self[:fracao_singular] ||= if fetch(:fracao_plural, '')[-1] == 'S'
-                                 fetch(:fracao_plural, '')[0..-2]
-                               end
-    # eliminar parametros errados
+    self[:moeda_singular]  ||= (fetch(:moeda_plural,  '')[0..-2] if fetch(:moeda_plural,  '')[-1] == 'S')
+    self[:fracao_singular] ||= (fetch(:fracao_plural, '')[0..-2] if fetch(:fracao_plural, '')[-1] == 'S')
+    self
+  end
+
+  # @return [Hash<String, Symbol>] parametrizacao moeda eliminar parametros errados
+  def eliminar_errados
     keep_if { |k, v| MOEDA.include?(k) && (k != :lc || EXTLC.include?(v)) }
   end
 
-  # Testa se contem numeracao romana
-  #
-  # @return [true, false] sim ou nao numeracao romana
+  # @return [true, false] testa se contem numeracao romana
   def romana?
     is_a?(String) ? RO_RE.match?(upcase) : false
   end
 
-  # Produz numeracao romana a partir de valor numerico
-  # ou valor numerico a partir da numeracao romana
-  # (valor numerico pode ser uma string digitos)
-  #
-  # @return [String, Integer] numeracao romana ou valor numerico
+  # @note valor numerico pode ser uma string digitos
+  # @return [String, Integer] numeracao romana a partir de numerico ou inteiro a partir da numeracao romana
   def romana
     # converte os valores do Hash
     if is_a?(Hash) then map { |k, v| [k, v.romana] }.to_h
     # converte objecto num Array com os valores convertidos
     elsif respond_to?(:to_a) then to_a.map(&:romana)
-    # numeracao romana a partir de inteiro ou string digitos
-    # (ignora parte fracionaria)
+    # numeracao romana a partir de inteiro ou string digitos (ignora parte fracionaria)
     elsif (inteiro = to_i) != 0 then ExtensoPt.ri2r(inteiro)
     # inteiro a partir da numeracao romana
     else RO_RE.match?(to_s) ? ExtensoPt.rr2i(upcase, 0) : ''

@@ -17,8 +17,7 @@ class ExtensoPtTest < Minitest::Test
     assert_equal ({ a: 1234, b: 'MCMXXVII' }), { a: 'MCCXXXIV', b: 1927 }.romana
     assert_equal %w[I II], (1..2).romana
     assert_equal [1, 2], %w[I II].romana
-    assert_equal ({ a: %w[MCMLXVIII XIV], b: 'II' }),
-                 { a: [1968, 14], b: 2 }.romana
+    assert_equal ({ a: %w[MCMLXVIII XIV], b: 'II' }), { a: [1968, 14], b: 2 }.romana
   end
 
   def test_romana?

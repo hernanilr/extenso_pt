@@ -23,6 +23,6 @@ module ExtensoPt
     return 0 if numeral.empty?
 
     v = ROMAN[numeral[-1].to_sym]
-    v < ultimo ? (rr2i(numeral.chop, v) - v) : (rr2i(numeral.chop, v) + v)
+    rr2i(numeral.chop, v) + (v < ultimo ? -v : v)
   end
 end
