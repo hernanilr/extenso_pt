@@ -7,8 +7,7 @@ module ExtensoPt
   # @param [Integer] mil o valor dum grupo 3 digitos a converter
   # @return [String] extenso das centenas
   def self.e900(mil)
-    A1000[@lc][(mil > 100 ? 1 : 0) + mil / 100] +
-      (mil > 100 && (mil % 100).positive? ? ' E ' : '')
+    A1000[@lc][(mil > 100 ? 1 : 0) + mil / 100] + (mil > 100 && (mil % 100).positive? ? ' E ' : '')
   end
 
   # Produz extenso das dezenas em portugues de portugal ou brasil
@@ -16,8 +15,7 @@ module ExtensoPt
   # @param [Integer] cem a centena dum grupo 3 digitos a converter
   # @return [String] extenso das dezenas
   def self.e090(cem)
-    A0100[@lc][cem / 10] +
-      (cem > 20 && (cem % 10).positive? ? ' E ' : '')
+    A0100[@lc][cem / 10] + (cem > 20 && (cem % 10).positive? ? ' E ' : '')
   end
 
   # Produz extenso das unidades em portugues de portugal ou brasil

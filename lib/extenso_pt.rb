@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'bigdecimal/util'
-require 'extenso_pt/constantes'
-require 'extenso_pt/variaveis'
-require 'extenso_pt/extenso'
-require 'extenso_pt/romana'
-require 'extenso_pt/version'
+require('bigdecimal/util')
+require('extenso_pt/constantes')
+require('extenso_pt/variaveis')
+require('extenso_pt/extenso')
+require('extenso_pt/romana')
+require('extenso_pt/version')
 
 # @author Hernani Rodrigues Vaz
 module ExtensoPt
@@ -35,7 +35,7 @@ module ExtensoPt
   # @return (see #extenso)
   def processa
     # converte valores do Hash nos seus extensos
-    if is_a?(Hash) then map { |k, v| [k, v.processa] }.to_h
+    if is_a?(Hash) then transform_values(&:processa)
     # converte objecto num Array com os valores convertidos nos seus extensos
     elsif respond_to?(:to_a) then to_a.map(&:processa)
     else
@@ -79,7 +79,7 @@ module ExtensoPt
   # @return [String, Integer] numeracao romana a partir de numerico ou inteiro a partir da numeracao romana
   def romana
     # converte os valores do Hash
-    if is_a?(Hash) then map { |k, v| [k, v.romana] }.to_h
+    if is_a?(Hash) then transform_values(&:romana)
     # converte objecto num Array com os valores convertidos
     elsif respond_to?(:to_a) then to_a.map(&:romana)
     # numeracao romana a partir de inteiro ou string digitos (ignora parte fracionaria)
