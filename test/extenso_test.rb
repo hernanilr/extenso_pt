@@ -3,6 +3,32 @@
 require('test_helper')
 
 class ExtensoPtTest < Minitest::Test
+  def u1
+    [
+      'TRÊS EUROS',
+      'QUATRO EUROS',
+      'CINCO EUROS',
+      'SEIS EUROS',
+      'SETE EUROS',
+      'OITO EUROS',
+      'NOVE EUROS',
+      'DEZ EUROS'
+    ]
+  end
+
+  def u2
+    [
+      'ONZE EUROS',
+      'DOZE EUROS',
+      'TREZE EUROS',
+      'CATORZE EUROS',
+      'QUINZE EUROS',
+      'DEZASSEIS EUROS',
+      'DEZASSETE EUROS',
+      'DEZOITO EUROS'
+    ]
+  end
+
   def test_contantes
     refute_nil(::ExtensoPt::VERSION)
     refute_nil(::ExtensoPt::EXTLC)
@@ -19,7 +45,8 @@ class ExtensoPtTest < Minitest::Test
     assert_equal('ZERO EUROS', 0.extenso)
     assert_equal('VINTE REAIS', 20.extenso(lc: :br))
     assert_equal('CENTO E ONZE EUROS', 111.extenso)
-    assert_equal('CENTO E VINTE E UM EUROS', 121.extenso)
+    # somente cria extenso de valores monetarios positivos
+    assert_equal('CENTO E VINTE E UM EUROS', -121.extenso)
     assert_equal('MIL E CEM EUROS', 1100.extenso)
     assert_equal('MIL CENTO E ONZE EUROS', 1111.extenso)
     # somente :pt, :br permitidos qualquer outro locale equivale usar :pt
@@ -73,6 +100,7 @@ class ExtensoPtTest < Minitest::Test
     assert_equal('CEM SEXTILHÕES DE REAIS',   (10**23).extenso(lc: :br))
     # limite maximo foi ultrapassado - 24 digitos
     assert_equal('', '1112223334445556667778889'.extenso)
+    assert_equal('', 1e24.extenso)
   end
 
   def test_use5
@@ -83,32 +111,6 @@ class ExtensoPtTest < Minitest::Test
     assert_equal(['UM EURO', 'DOIS EUROS'], (1..2).extenso)
     assert_equal(['UM EURO', 'DOIS EUROS'], %w[1 2].extenso)
     assert_equal({ a: ['TRÊS EUROS', 'DEZ EUROS'], b: 'DOIS EUROS' }, { a: [3, 10], b: 2 }.extenso)
-  end
-
-  def u1
-    [
-      'TRÊS EUROS',
-      'QUATRO EUROS',
-      'CINCO EUROS',
-      'SEIS EUROS',
-      'SETE EUROS',
-      'OITO EUROS',
-      'NOVE EUROS',
-      'DEZ EUROS'
-    ]
-  end
-
-  def u2
-    [
-      'ONZE EUROS',
-      'DOZE EUROS',
-      'TREZE EUROS',
-      'CATORZE EUROS',
-      'QUINZE EUROS',
-      'DEZASSEIS EUROS',
-      'DEZASSETE EUROS',
-      'DEZOITO EUROS'
-    ]
   end
 
   def test_unidades

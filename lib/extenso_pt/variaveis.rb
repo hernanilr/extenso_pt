@@ -25,9 +25,9 @@ module ExtensoPt
   # @param [String] digitos do valor monetario a converter
   def self.prif(digitos)
     # cria array de grupos 3 digitos da parte inteira ex: 123022.12 => [22, 123]
-    @ai = digitos[/^\d+/].to_s.reverse.scan(/\d{1,3}/).map { |i| Integer(i.reverse) }
+    @ai = digitos[/^\d+/].reverse.scan(/\d{1,3}/).map { |i| Integer(i.reverse) }
 
-    # obtem parte fracionaria da string digitos arredondada a 2 casas decimais ex: 123022.12 => 12
+    # obtem parte fracionaria da string digitos arredondada a 2 casas decimais ex: 123022.124 => 12, 123022.125 => 13
     @nf = (Float(digitos[/\.\d*/]) * 100).round
   end
 
@@ -43,7 +43,7 @@ module ExtensoPt
 
   # @return [true, false] sim ou nao para controle proposicao DE
   def self.cde?
-    Integer(@ai[0..1].to_a.inject(:+)).zero? && Integer(@ai[2..].to_a.inject(:+) || 0).positive?
+    Integer(@ai[0..1].inject(:+)).zero? && Integer(@ai[2..].to_a.inject(:+) || 0).positive?
   end
 
   # @return [true, false] sim ou nao para controle proposicao E

@@ -41,10 +41,11 @@ module ExtensoPt
     else
       # converte objeto em string digitos utilizando bigdecimal para
       #  evitar problemas com aritmetica virgula flutuante em valores >1e12
+      #  valores negativos sao convertidos em positivos
       # parametrizar parte inteira/fracionaria (@ai, @nf) da string digitos
-      ExtensoPt.prif(to_d.to_s('F'))
+      ExtensoPt.prif(to_d.abs.to_s('F'))
 
-      # processar extenso - valores >1e24 sao ignorados
+      # processar extenso - valores >= 1e24 sao ignorados
       ExtensoPt.cvai.count > 8 ? '' : ExtensoPt.ejun
     end
   end
@@ -82,8 +83,8 @@ module ExtensoPt
     if is_a?(Hash) then transform_values(&:romana)
     # converte objecto num Array com os valores convertidos
     elsif respond_to?(:to_a) then to_a.map(&:romana)
-    # numeracao romana a partir de inteiro ou string digitos (ignora parte fracionaria)
-    elsif (inteiro = to_i) != 0 then ExtensoPt.ri2r(inteiro)
+    # numeracao romana a partir de inteiro ou string digitos (ignora parte fracionaria & negativos)
+    elsif (inteiro = to_i) != 0 then ExtensoPt.ri2r(inteiro.abs)
     # inteiro a partir da numeracao romana
     else RO_RE.match?(to_s) ? ExtensoPt.rr2i(upcase, 0) : ''
     end

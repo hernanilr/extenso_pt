@@ -9,9 +9,9 @@ module ExtensoPt
   def self.ri2r(inteiro)
     return '' if inteiro.zero?
 
-    # numeracao romana nao tem negativos
-    inteiro = inteiro.abs if inteiro.negative?
-    ROMAN.each { |r, v| return r.to_s + ri2r(inteiro - v) if v <= inteiro }
+    ROMAN.each do |r, v|
+      return r.to_s + ri2r(inteiro - v) if v <= inteiro
+    end
   end
 
   # Produz inteiro a partir de numeral romano

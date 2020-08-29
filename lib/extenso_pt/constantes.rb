@@ -53,10 +53,8 @@ module ExtensoPt
     br: ['', ' MIL', ' MILHÕES', ' BILHÕES', ' TRILHÕES', ' QUADRILHÕES', ' QUINTILHÕES', ' SEXTILHÕES']
   }.freeze
 
-  # numeracao romana
-  ROMAN = {
-    M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1
-  }.freeze
+  # numeracao romana ordem decrescente (ordem importante)
+  ROMAN = { M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1 }.freeze
 
   # expressao regular da numeracao romana
   RO_RE = /^M*(D?C{0,3}|C[DM])(L?X{0,3}|X[LC])(V?I{0,3}|I[VX])$/i.freeze
