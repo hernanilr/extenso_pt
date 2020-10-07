@@ -5,12 +5,13 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require('extenso_pt/version')
 
 Gem::Specification.new do |spec|
-  spec.name          = 'extenso_pt'
-  spec.version       = ExtensoPt::VERSION
-  spec.authors       = ['Hernâni Rodrigues Vaz']
-  spec.email         = ['hernanirvaz@gmail.com']
-  spec.homepage      = 'https://github.com/hernanilr/extenso_pt'
-  spec.license       = 'MIT'
+  spec.name                  = 'extenso_pt'
+  spec.version               = ExtensoPt::VERSION
+  spec.authors               = ['Hernâni Rodrigues Vaz']
+  spec.email                 = ['hernanirvaz@gmail.com']
+  spec.homepage              = 'https://github.com/hernanilr/extenso_pt'
+  spec.license               = 'MIT'
+  spec.required_ruby_version = '~> 2.7'
 
   spec.summary = 'Produz extenso em portugês de portugal, brasil ou numeracao romana.'
   spec.description = spec.summary
@@ -35,6 +36,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency('bundler')
   spec.add_development_dependency('minitest')
   spec.add_development_dependency('rake')
+  spec.add_development_dependency('reek')
+  spec.add_development_dependency('rubocop')
+  spec.add_development_dependency('solargraph')
 
   spec.add_dependency('bigdecimal')
 end

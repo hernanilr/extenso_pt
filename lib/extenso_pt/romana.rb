@@ -2,27 +2,24 @@
 
 # @author Hernani Rodrigues Vaz
 module ExtensoPt
-  # Produz numeral romano a partir de inteiro
-  #
+  # numeracao romana ordem decrescente (ordem importante)
+  ROMAN = { M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1 }.freeze
+
   # @param [Integer] inteiro a converter
   # @return [String] numeral romano do inteiro
   def self.ri2r(inteiro)
     return '' if inteiro.zero?
 
-    ROMAN.each do |r, v|
-      return r.to_s + ri2r(inteiro - v) if v <= inteiro
-    end
+    ROMAN.each { |srm, val| return "#{srm}#{ri2r(inteiro - val)}" if val <= inteiro }
   end
 
-  # Produz inteiro a partir de numeral romano
-  #
   # @param [String] numeral romano a converter
   # @param [Integer] ultimo valor convertido
   # @return [Integer] inteiro do numeral romano
   def self.rr2i(numeral, ultimo)
     return 0 if numeral.empty?
 
-    v = ROMAN[numeral[-1].to_sym]
-    rr2i(numeral.chop, v) + (v < ultimo ? -v : v)
+    val = ROMAN[numeral[-1].to_sym]
+    rr2i(numeral.chop, val) + (val < ultimo ? -val : val)
   end
 end
