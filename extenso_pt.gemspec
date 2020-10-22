@@ -14,10 +14,9 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '~> 2.7'
 
   spec.summary = 'Produz extenso em portugês de portugal, brasil ou numeracao romana.'
-  spec.description = spec.summary
-  spec.description += ' Os valores podem ser um numerico, uma string de digitos ou um conjunto destes agrupados em '\
-    '(array, range, hash). O extenso pode ser produzido na escala longa (utilizada em todos os países lusófonos) ou '\
-    'na escala curta (utilizada no Brasil). Pode ainda produzir numeracao romana e vice versa.'
+  spec.description = "#{spec.summary} Os valores podem ser um numerico, uma string de digitos ou um conjunto destes "\
+    'agrupados em (array, range, hash). O extenso pode ser produzido na escala longa (utilizada em todos os países '\
+    'lusófonos) ou na escala curta (utilizada no Brasil). Pode ainda produzir numeracao romana e vice versa.'
 
   # use "yard" to build full HTML docs.
   spec.metadata['yard.run'] = 'yard'
