@@ -5,22 +5,20 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require('extenso_pt/version')
 
 Gem::Specification.new do |spec|
-  spec.name                  = 'extenso_pt'
-  spec.version               = ExtensoPt::VERSION
-  spec.authors               = ['Hernâni Rodrigues Vaz']
-  spec.email                 = ['hernanirvaz@gmail.com']
-  spec.homepage              = 'https://github.com/hernanilr/extenso_pt'
-  spec.license               = 'MIT'
-  spec.required_ruby_version = '~> 2.7'
-
-  spec.summary = 'Produz extenso em portugês de portugal, brasil ou numeracao romana.'
+  spec.name        = 'extenso_pt'
+  spec.version     = ExtensoPt::VERSION
+  spec.authors     = ['Hernâni Rodrigues Vaz']
+  spec.email       = ['hernanirvaz@gmail.com']
+  spec.homepage    = 'https://github.com/hernanilr/extenso_pt'
+  spec.license     = 'MIT'
+  spec.summary     = 'Produz extenso em portugês de portugal, brasil ou numeracao romana.'
   spec.description = "#{spec.summary} Os valores podem ser um numerico, uma string de digitos ou um conjunto destes "\
     'agrupados em (array, range, hash). O extenso pode ser produzido na escala longa (utilizada em todos os países '\
     'lusófonos) ou na escala curta (utilizada no Brasil). Pode ainda produzir numeracao romana e vice versa.'
 
-  # use "yard" to build full HTML docs.
-  spec.metadata['yard.run'] = 'yard'
+  spec.required_ruby_version    = Gem::Requirement.new('~> 2.7')
   spec.metadata['homepage_uri'] = spec.homepage
+  spec.metadata['yard.run']     = 'yard'
 
   # Specify which files should be added to the gem when it is released.
   # loads the files in the RubyGem that have been added into git.
@@ -38,6 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency('reek')
   spec.add_development_dependency('rubocop')
   spec.add_development_dependency('solargraph')
+  spec.add_development_dependency('yard')
 
   spec.add_dependency('bigdecimal')
 end

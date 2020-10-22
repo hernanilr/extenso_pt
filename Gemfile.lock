@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    extenso_pt (0.7.6)
+    extenso_pt (0.7.7)
       bigdecimal
 
 GEM
@@ -76,6 +76,7 @@ DEPENDENCIES
   reek
   rubocop
   solargraph
+  yard
 
 BUNDLED WITH
    2.1.4
