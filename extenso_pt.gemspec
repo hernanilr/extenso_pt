@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
     'agrupados em (array, range, hash). O extenso pode ser produzido na escala longa (utilizada em todos os países '\
     'lusófonos) ou na escala curta (utilizada no Brasil). Pode ainda produzir numeracao romana e vice versa.'
 
-  spec.required_ruby_version    = Gem::Requirement.new('~> 3.1')
+  spec.required_ruby_version    = Gem::Requirement.new('~> 3.4')
   spec.metadata['homepage_uri'] = spec.homepage
   spec.metadata['yard.run']     = 'yard'
 
